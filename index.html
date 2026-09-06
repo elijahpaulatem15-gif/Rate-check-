@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rate Check</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">💱</span>
+            <span>RATE CHECK</span>
+        </div>
+
+        <p class="tagline">
+            Know the rate. Know the difference.
+        </p>
+    </header>
+
+
+    <main class="container">
+
+        <!-- Main Converter -->
+        <section class="card converter-card">
+
+            <div class="card-title">
+                <div>
+                    <h1>Currency Converter</h1>
+                    <p>Compare currencies using current market rates.</p>
+                </div>
+            </div>
+
+
+            <div class="amount-box">
+                <label for="amount">Amount</label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    value="1"
+                    min="0"
+                    step="any"
+                >
+            </div>
+
+
+            <div class="currency-row">
+
+                <div class="currency-box">
+                    <label for="fromCurrency">From</label>
+
+                    <select id="fromCurrency">
+                        <option value="USD">🇺🇸 USD — US Dollar</option>
+                    </select>
+                </div>
+
+
+                <button
+                    class="swap-button"
+                    id="swapButton"
+                    title="Swap currencies"
+                >
+                    ⇄
+                </button>
+
+
+                <div class="currency-box">
+                    <label for="toCurrency">To</label>
+
+                    <select id="toCurrency">
+                        <option value="SSP">🇸🇸 SSP — South Sudanese Pound</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <button class="convert-button" id="convertButton">
+                Check Rate
+            </button>
+
+
+            <div class="result-box" id="resultBox">
+
+                <p class="result-label">
+                    Current Market Rate
+                </p>
+
+                <div class="result-value" id="resultValue">
+                    Loading...
+                </div>
+
+                <p class="rate-text" id="rateText">
+                    Getting the latest rate...
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- South Sudan -->
+        <section class="card south-sudan-card">
+
+            <div class="country-heading">
+                <span class="flag">🇸🇸</span>
+
+                <div>
+                    <h2>South Sudan Rate</h2>
+                    <p>USD → South Sudanese Pound</p>
+                </div>
+            </div>
+
+
+            <div class="rate-grid">
+
+                <div class="rate-item">
+                    <span>Market Rate</span>
+                    <strong id="sspMarketRate">—</strong>
+                </div>
+
+                <div class="rate-item">
+                    <span>Black Market</span>
+                    <strong id="sspBlackRate">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="black-market-input">
+
+                <label for="blackMarketRate">
+                    Enter local black-market rate
+                </label>
+
+                <div class="input-row">
+
+                    <input
+                        type="number"
+                        id="blackMarketRate"
+                        placeholder="Example: 5000"
+                        min="0"
+                        step="any"
+                    >
+
+                    <button id="saveBlackRate">
+                        Save
+                    </button>
+
+                </div>
+
+                <small>
+                    Black-market figures are manually entered and
+                    should always be checked against a trusted local source.
+                </small>
+
+            </div>
+
+
+            <div class="difference-box">
+
+                <span>Difference</span>
+
+                <strong id="rateDifference">
+                    —
+                </strong>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- Information -->
+        <section class="info-section">
+
+            <h2>About Rate Check</h2>
+
+            <p>
+                Rate Check helps you compare the United States Dollar
+                with currencies around the world. Market rates come from
+                an exchange-rate data source, while local street rates
+                can be entered separately for comparison.
+            </p>
+
+            <p class="disclaimer">
+                Rates can change frequently. Always verify important
+                transactions with your bank, exchange provider, or
+                trusted local source.
+            </p>
+
+        </section>
+
+    </main>
+
+
+
+    <footer>
+
+        <p>
+            © 2026 Rate Check
+        </p>
+
+        <p>
+            Built to make exchange rates easier to understand.
+        </p>
+
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+              </html>
