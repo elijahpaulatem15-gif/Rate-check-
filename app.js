@@ -1,4 +1,4 @@
-const API_URL = "https://api.frankfurter.dev/v1";
+const API_URL = "https://api.frankfurter.dev/v2";
 
 const amountInput = document.getElementById("amount");
 const fromCurrency = document.getElementById("fromCurrency");
@@ -32,8 +32,15 @@ async function loadCurrencies() {
         if (!response.ok) {
             throw new Error("Unable to load currencies");
         }
+const data = await response.json();
 
-        currencies = await response.json();
+currencies = Object.fromEntries(
+  data.map(currency => [
+    currency.iso_code,
+    currency.name
+  ])
+);
+        
 
         populateCurrencies();
 
@@ -105,19 +112,23 @@ function populateCurrencies() {
 // GET EXCHANGE RATE
 // --------------------------------------------------
 
-async function getRate(from, to) {
-
+async function async function getRate(from, to) {
     if (from === to) {
         return 1;
     }
 
     const response = await fetch(
-        `${API_URL}/latest?base=${encodeURIComponent(from)}&symbols=${encodeURIComponent(to)}`
+        `${API_URL}/rate/${from}/${to}`
     );
 
     if (!response.ok) {
-        throw new Error("Exchange rate unavailable");
+        throw new Error("Unable to fetch exchange rate");
     }
+
+    const data = await response.json();
+
+    return data.rate;
+}
 
     const data = await response.json();
 
