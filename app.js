@@ -112,7 +112,7 @@ function populateCurrencies() {
 // GET EXCHANGE RATE
 // --------------------------------------------------
 
-async function async function getRate(from, to) {
+async function getRate(from, to) {
     if (from === to) {
         return 1;
     }
@@ -130,15 +130,6 @@ async function async function getRate(from, to) {
     return data.rate;
 }
 
-    const data = await response.json();
-
-    if (!data.rates || data.rates[to] === undefined) {
-        throw new Error("Rate not available");
-    }
-
-    return data.rates[to];
-
-}
 
 
 // --------------------------------------------------
