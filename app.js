@@ -305,7 +305,38 @@ clearHistoryButton.addEventListener("click", function () {
     displayRateHistory();
 
 });
-        
+
+// --------------------------------------------------
+// CURRENCY SEARCH
+// --------------------------------------------------
+
+const currencySearch =
+    document.getElementById("currencySearch");
+
+currencySearch.addEventListener("input", function () {
+
+    const searchText =
+        currencySearch.value.toLowerCase().trim();
+
+    const options =
+        fromCurrency.options;
+
+    for (let i = 0; i < options.length; i++) {
+
+        const code =
+            options[i].value.toLowerCase();
+
+        const name =
+            options[i].textContent.toLowerCase();
+
+        options[i].hidden =
+            searchText !== "" &&
+            !code.includes(searchText) &&
+            !name.includes(searchText);
+    }
+
+});
+
 // --------------------------------------------------
 // SOUTH SUDAN RATE
 // --------------------------------------------------
