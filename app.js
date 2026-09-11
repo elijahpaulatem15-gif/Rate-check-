@@ -310,22 +310,25 @@ clearHistoryButton.addEventListener("click", function () {
 // CURRENCY SEARCH
 // --------------------------------------------------
 
-const currencySearch =
-    document.getElementById("currencySearch");
+const fromCurrencySearch =
+    document.getElementById("fromCurrencySearch");
 
-currencySearch.addEventListener("input", function () {
+const toCurrencySearch =
+    document.getElementById("toCurrencySearch");
+
+
+function filterCurrencySelect(
+    searchInput,
+    selectElement
+) {
 
     const searchText =
-        currencySearch.value.toLowerCase().trim();
+        searchInput.value.toLowerCase().trim();
 
-    const currentFrom =
-        fromCurrency.value;
+    const currentValue =
+        selectElement.value;
 
-    const currentTo =
-        toCurrency.value;
-
-    fromCurrency.innerHTML = "";
-    toCurrency.innerHTML = "";
+    selectElement.innerHTML = "";
 
     Object.entries(currencies)
         .sort((a, b) => a[0].localeCompare(b[0]))
@@ -339,34 +342,49 @@ currencySearch.addEventListener("input", function () {
         })
         .forEach(([code, name]) => {
 
-            const optionFrom =
+            const option =
                 document.createElement("option");
 
-            optionFrom.value = code;
-            optionFrom.textContent =
+            option.value = code;
+            option.textContent =
                 `${code} — ${name}`;
 
-            const optionTo =
-                document.createElement("option");
-
-            optionTo.value = code;
-            optionTo.textContent =
-                `${code} — ${name}`;
-
-            fromCurrency.appendChild(optionFrom);
-            toCurrency.appendChild(optionTo);
+            selectElement.appendChild(option);
 
         });
 
-    if (currencies[currentFrom]) {
-        fromCurrency.value = currentFrom;
+    if (
+        currencies[currentValue] &&
+        [...selectElement.options]
+            .some(option =>
+                option.value === currentValue
+            )
+    ) {
+        selectElement.value = currentValue;
     }
+}
 
-    if (currencies[currentTo]) {
-        toCurrency.value = currentTo;
+
+fromCurrencySearch.addEventListener(
+    "input",
+    function () {
+        filterCurrencySelect(
+            fromCurrencySearch,
+            fromCurrency
+        );
     }
+);
 
-});
+
+toCurrencySearch.addEventListener(
+    "input",
+    function () {
+        filterCurrencySelect(
+            toCurrencySearch,
+            toCurrency
+        );
+    }
+);
 
 // --------------------------------------------------
 // SOUTH SUDAN RATE
