@@ -85,27 +85,40 @@ function populateCurrencies() {
 
         });
 
+// Default currencies
 
-    // Default currencies
+const savedFrom =
+    localStorage.getItem("rateCheckFromCurrency");
 
-    if (currencies.USD) {
-        fromCurrency.value = "USD";
-    }
+const savedTo =
+    localStorage.getItem("rateCheckToCurrency");
 
-    /*
-       Frankfurter may not provide SSP.
-       If SSP is unavailable, we keep USD as the
-       fallback until a dedicated SSP data source
-       is added.
-    */
 
-    if (currencies.SSP) {
-        toCurrency.value = "SSP";
-    } else if (currencies.EUR) {
-        toCurrency.value = "EUR";
-    }
+if (savedFrom && currencies[savedFrom]) {
+
+    fromCurrency.value = savedFrom;
+
+} else if (currencies.USD) {
+
+    fromCurrency.value = "USD";
 
 }
+
+
+if (savedTo && currencies[savedTo]) {
+
+    toCurrency.value = savedTo;
+
+} else if (currencies.SSP) {
+
+    toCurrency.value = "SSP";
+
+} else if (currencies.EUR) {
+
+    toCurrency.value = "EUR";
+
+}
+    
 
 
 // --------------------------------------------------
@@ -143,6 +156,9 @@ async function convertCurrency() {
     const from = fromCurrency.value;
     const to = toCurrency.value;
 
+localStorage.setItem("rateCheckFromCurrency", from);
+localStorage.setItem("rateCheckToCurrency", to);
+    
     if (!amount || amount < 0) {
 
         resultValue.textContent = "Enter an amount";
