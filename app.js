@@ -119,7 +119,7 @@ if (savedTo && currencies[savedTo]) {
 
 }
     
-
+}
 
 // --------------------------------------------------
 // GET EXCHANGE RATE
