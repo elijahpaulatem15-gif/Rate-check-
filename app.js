@@ -276,6 +276,21 @@ function displayRateHistory() {
         }
 
 // --------------------------------------------------
+// CLEAR RATE HISTORY
+// --------------------------------------------------
+
+const clearHistoryButton =
+    document.getElementById("clearHistory");
+
+clearHistoryButton.addEventListener("click", function () {
+
+    localStorage.removeItem("rateCheckHistory");
+
+    displayRateHistory();
+
+});
+        
+// --------------------------------------------------
 // SOUTH SUDAN RATE
 // --------------------------------------------------
 
