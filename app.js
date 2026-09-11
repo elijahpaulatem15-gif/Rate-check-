@@ -169,7 +169,14 @@ async function convertCurrency() {
 
         rateText.textContent =
             `1 ${from} = ${formatNumber(rate)} ${to}`;
-
+// Save conversion to Rate History
+saveRateHistory({
+    amount: amount,
+    from: from,
+    to: to,
+    rate: rate,
+    result: converted
+});
 
         // If USD → SSP is being displayed,
         // update the South Sudan section.
@@ -193,6 +200,80 @@ async function convertCurrency() {
 
 }
 
+// --------------------------------------------------
+// RATE HISTORY
+// --------------------------------------------------
+
+function saveRateHistory(entry) {
+
+    let history =
+        JSON.parse(localStorage.getItem("rateCheckHistory")) || [];
+
+    history.unshift({
+        amount: entry.amount,
+        from: entry.from,
+        to: entry.to,
+        rate: entry.rate,
+        result: entry.result
+    });
+
+    // Keep only the latest 10 conversions
+    history = history.slice(0, 10);
+
+    localStorage.setItem(
+        "rateCheckHistory",
+        JSON.stringify(history)
+    );
+
+    displayRateHistory();
+}
+// --------------------------------------------------
+// DISPLAY RATE HISTORY
+// --------------------------------------------------
+
+function displayRateHistory() {
+
+    const historyContainer =
+        document.getElementById("rateHistory");
+
+    if (!historyContainer) return;
+
+    const history =
+        JSON.parse(localStorage.getItem("rateCheckHistory")) || [];
+
+    if (history.length === 0) {
+
+        historyContainer.innerHTML = `
+            <p class="history-empty">
+                No rate history yet.
+            </p>
+        `;
+
+        return;
+    }
+
+    historyContainer.innerHTML = history.map(entry => `
+
+        <div class="history-item">
+
+            <div class="history-main">
+                ${formatNumber(entry.amount)}
+                ${entry.from}
+                → 
+                ${formatNumber(entry.result)}
+                ${entry.to}
+            </div>
+
+            <div class="history-rate">
+                1 ${entry.from} =
+                ${formatNumber(entry.rate)}
+                ${entry.to}
+            </div>
+
+        </div>
+
+    `).join("");
+        }
 
 // --------------------------------------------------
 // SOUTH SUDAN RATE
@@ -384,3 +465,4 @@ function formatNumber(number) {
 loadCurrencies();
 
 loadSavedBlackMarketRate();
+displayRateHistory();
