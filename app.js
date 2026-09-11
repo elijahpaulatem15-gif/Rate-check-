@@ -318,21 +318,52 @@ currencySearch.addEventListener("input", function () {
     const searchText =
         currencySearch.value.toLowerCase().trim();
 
-    const options =
-        fromCurrency.options;
+    const currentFrom =
+        fromCurrency.value;
 
-    for (let i = 0; i < options.length; i++) {
+    const currentTo =
+        toCurrency.value;
 
-        const code =
-            options[i].value.toLowerCase();
+    fromCurrency.innerHTML = "";
+    toCurrency.innerHTML = "";
 
-        const name =
-            options[i].textContent.toLowerCase();
+    Object.entries(currencies)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .filter(([code, name]) => {
 
-        options[i].hidden =
-            searchText !== "" &&
-            !code.includes(searchText) &&
-            !name.includes(searchText);
+            const text =
+                `${code} ${name}`.toLowerCase();
+
+            return text.includes(searchText);
+
+        })
+        .forEach(([code, name]) => {
+
+            const optionFrom =
+                document.createElement("option");
+
+            optionFrom.value = code;
+            optionFrom.textContent =
+                `${code} — ${name}`;
+
+            const optionTo =
+                document.createElement("option");
+
+            optionTo.value = code;
+            optionTo.textContent =
+                `${code} — ${name}`;
+
+            fromCurrency.appendChild(optionFrom);
+            toCurrency.appendChild(optionTo);
+
+        });
+
+    if (currencies[currentFrom]) {
+        fromCurrency.value = currentFrom;
+    }
+
+    if (currencies[currentTo]) {
+        toCurrency.value = currentTo;
     }
 
 });
