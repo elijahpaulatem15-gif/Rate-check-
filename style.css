@@ -364,3 +364,96 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* CURRENCY SEARCH FIX */
+
+.currency-box {
+    min-width: 0;
+}
+
+.currency-box input {
+    width: 100%;
+    min-width: 0;
+}
+
+.currency-box select {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Keep currency controls properly sized */
+.currency-row {
+    width: 100%;
+}
+
+.currency-row .currency-box {
+    flex: 1 1 0;
+}
+
+/* SEARCH RESULTS */
+.currency-search-results {
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #080808;
+    border: 1px solid #333;
+    border-radius: 10px;
+    margin-top: 6px;
+}
+
+.currency-search-results div {
+    padding: 12px 14px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+}
+
+.currency-search-results div:hover {
+    background: #1c1c1c;
+}
+
+/* PREVENT RATE CARDS FROM SQUEEZING */
+.rate-grid {
+    width: 100%;
+}
+
+.rate-item {
+    min-width: 0;
+}
+
+.rate-item strong {
+    display: block;
+    word-break: normal;
+    overflow-wrap: anywhere;
+}
+
+/* RESULT NUMBERS */
+.result-value {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+/* MOBILE SEARCH LAYOUT */
+@media (max-width: 520px) {
+
+    .currency-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    .currency-box {
+        min-width: 0;
+    }
+
+    .currency-box input {
+        font-size: 14px;
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    .swap-button {
+        flex: 0 0 42px;
+    }
+}
+    
