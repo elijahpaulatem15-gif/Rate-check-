@@ -16,6 +16,10 @@ const blackMarketRate = document.getElementById("blackMarketRate");
 const saveBlackRate = document.getElementById("saveBlackRate");
 const rateDifference = document.getElementById("rateDifference");
 
+const sspLocalRate = document.getElementById("sspLocalRate");
+const localMarketRate = document.getElementById("localMarketRate");
+const saveLocalRate = document.getElementById("saveLocalRate");
+
 let currencies = {};
 
 
@@ -397,10 +401,52 @@ function updateSouthSudanRate(rate) {
     sspMarketRate.textContent =
         `${formatNumber(rate)} SSP`;
 
-    calculateDifference(rate);
+    calculateDifference();
 
 }
 
+// --------------------------------------------------
+// LOCAL MARKET RATE
+// --------------------------------------------------
+
+function loadSavedLocalMarketRate() {
+
+    const savedRate =
+        localStorage.getItem("rateCheckLocalMarketSSP");
+
+    if (savedRate) {
+
+        localMarketRate.value = savedRate;
+
+        sspLocalRate.textContent =
+            `${formatNumber(parseFloat(savedRate))} SSP`;
+
+    }
+
+}
+
+
+saveLocalRate.addEventListener("click", function () {
+
+    const value = parseFloat(localMarketRate.value);
+
+    if (!value || value <= 0) {
+
+        alert("Please enter a valid local market rate.");
+
+        return;
+    }
+
+    localStorage.setItem(
+        "rateCheckLocalMarketSSP",
+        value
+    );
+
+    sspLocalRate.textContent =
+        `${formatNumber(value)} SSP`;
+
+});
+    
 
 // --------------------------------------------------
 // BLACK MARKET RATE
@@ -453,7 +499,7 @@ saveBlackRate.addEventListener("click", async function () {
         const marketRate =
             await getRate("USD", "SSP");
 
-        calculateDifference(marketRate);
+        calculateDifference();
 
     } catch (error) {
 
@@ -470,13 +516,16 @@ saveBlackRate.addEventListener("click", async function () {
 // CALCULATE BLACK MARKET DIFFERENCE
 // --------------------------------------------------
 
-function calculateDifference(marketRate) {
+function calculateDifference() {
+
+    const localRate =
+        parseFloat(localMarketRate.value);
 
     const blackRate =
         parseFloat(blackMarketRate.value);
 
 
-    if (!marketRate || !blackRate) {
+    if (!localRate || !blackRate) {
 
         rateDifference.textContent = "—";
 
@@ -485,40 +534,17 @@ function calculateDifference(marketRate) {
 
 
     const difference =
-        blackRate - marketRate;
+        blackRate - localRate;
 
 
     const percentage =
-        (difference / marketRate) * 100;
+        (difference / localRate) * 100;
 
 
     rateDifference.textContent =
         `${formatNumber(difference)} SSP (${percentage.toFixed(2)}%)`;
 
 }
-
-
-// --------------------------------------------------
-// SWAP CURRENCIES
-// --------------------------------------------------
-
-swapButton.addEventListener("click", function () {
-
-    const currentFrom =
-        fromCurrency.value;
-
-    const currentTo =
-        toCurrency.value;
-
-
-    fromCurrency.value = currentTo;
-    toCurrency.value = currentFrom;
-
-
-    convertCurrency();
-
-});
-
 
 // --------------------------------------------------
 // BUTTON
