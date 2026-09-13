@@ -122,79 +122,107 @@
 
         </section>
 
+<!-- South Sudan -->
+<section class="card south-sudan-card">
+
+    <div class="country-heading">
+        <span class="flag">🇸🇸</span>
+
+        <div>
+            <h2>South Sudan Rate</h2>
+            <p>USD → South Sudanese Pound</p>
+        </div>
+    </div>
 
 
-        <!-- South Sudan -->
-        <section class="card south-sudan-card">
+    <div class="rate-grid">
 
-            <div class="country-heading">
-                <span class="flag">🇸🇸</span>
+        <div class="rate-item">
+            <span>Reference Rate</span>
+            <strong id="sspMarketRate">—</strong>
+        </div>
 
-                <div>
-                    <h2>South Sudan Rate</h2>
-                    <p>USD → South Sudanese Pound</p>
-                </div>
-            </div>
+        <div class="rate-item">
+            <span>Local Market Rate</span>
+            <strong id="sspLocalRate">—</strong>
+        </div>
 
+        <div class="rate-item">
+            <span>Black Market</span>
+            <strong id="sspBlackRate">—</strong>
+        </div>
 
-            <div class="rate-grid">
-
-                <div class="rate-item">
-                    <span>Market Rate</span>
-                    <strong id="sspMarketRate">—</strong>
-                </div>
-
-                <div class="rate-item">
-                    <span>Black Market</span>
-                    <strong id="sspBlackRate">—</strong>
-                </div>
-
-            </div>
+    </div>
 
 
-            <div class="black-market-input">
+    <div class="black-market-input">
 
-                <label for="blackMarketRate">
-                    Enter local black-market rate
-                </label>
+        <label for="localMarketRate">
+            Enter local market rate
+        </label>
 
-                <div class="input-row">
+        <div class="input-row">
 
-                    <input
-                        type="number"
-                        id="blackMarketRate"
-                        placeholder="Example: 5000"
-                        min="0"
-                        step="any"
-                    >
+            <input
+                type="number"
+                id="localMarketRate"
+                placeholder="Example: 74000"
+                min="0"
+                step="any"
+            >
 
-                    <button id="saveBlackRate">
-                        Save
-                    </button>
+            <button id="saveLocalRate">
+                Save
+            </button>
 
-                </div>
+        </div>
 
-                <small>
-                    Black-market figures are manually entered and
-                    should always be checked against a trusted local source.
-                </small>
-
-            </div>
+    </div>
 
 
-            <div class="difference-box">
+    <div class="black-market-input">
 
-                <span>Difference</span>
+        <label for="blackMarketRate">
+            Enter local black-market rate
+        </label>
 
-                <strong id="rateDifference">
-                    —
-                </strong>
+        <div class="input-row">
 
-            </div>
+            <input
+                type="number"
+                id="blackMarketRate"
+                placeholder="Example: 76000"
+                min="0"
+                step="any"
+            >
 
-        </section>
+            <button id="saveBlackRate">
+                Save
+            </button>
 
-<!-- Rate History -->
+        </div>
+
+        <small>
+            Local and black-market figures are manually entered and
+            should always be checked against a trusted local source.
+        </small>
+
+    </div>
+
+
+    <div class="difference-box">
+
+        <span>Local → Black Market Difference</span>
+
+        <strong id="rateDifference">
+            —
+        </strong>
+
+    </div>
+
+            </section>
+
+        <!-- Rate History -->
 <section class="card history-card">
 
     <div class="country-heading">
