@@ -4,6 +4,11 @@ const amountInput = document.getElementById("amount");
 const fromCurrency = document.getElementById("fromCurrency");
 const toCurrency = document.getElementById("toCurrency");
 
+const countryFlag = document.getElementById("countryFlag");
+const countryRateTitle = document.getElementById("countryRateTitle");
+const countryRatePair = document.getElementById("countryRatePair");
+
+
 const convertButton = document.getElementById("convertButton");
 const swapButton = document.getElementById("swapButton");
 
@@ -153,6 +158,38 @@ async function getRate(from, to) {
 // CONVERT CURRENCY
 // --------------------------------------------------
 
+function updateCountryRateHeader(from, to) {
+
+    const fromName = currencies[from] || from;
+    const toName = currencies[to] || to;
+
+    const flags = {
+        USD: "🇺🇸",
+        EUR: "🇪🇺",
+        GBP: "🇬🇧",
+        KES: "🇰🇪",
+        UGX: "🇺🇬",
+        SSP: "🇸🇸",
+        NGN: "🇳🇬",
+        GHS: "🇬🇭",
+        ZAR: "🇿🇦",
+        AED: "🇦🇪",
+        SAR: "🇸🇦",
+        EGP: "🇪🇬",
+        CNY: "🇨🇳",
+        JPY: "🇯🇵",
+        INR: "🇮🇳"
+    };
+
+    countryFlag.textContent = flags[to] || "🌍";
+
+    countryRateTitle.textContent =
+        `${toName} Rate`;
+
+    countryRatePair.textContent =
+        `${from} → ${toName}`;
+        }
+
 async function convertCurrency() {
 
     const amount = parseFloat(amountInput.value);
@@ -160,6 +197,8 @@ async function convertCurrency() {
     const from = fromCurrency.value;
     const to = toCurrency.value;
 
+updateCountryRateHeader(from, to);
+    
 localStorage.setItem("rateCheckFromCurrency", from);
 localStorage.setItem("rateCheckToCurrency", to);
     
