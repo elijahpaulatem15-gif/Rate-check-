@@ -11,7 +11,9 @@ body {
     min-height: 100vh;
 }
 
-/* HEADER */
+/* ==============================
+   HEADER
+============================== */
 
 .header {
     text-align: center;
@@ -39,20 +41,23 @@ body {
     font-size: 14px;
 }
 
-
-/* MAIN */
+/* ==============================
+   MAIN
+============================== */
 
 .container {
     width: 100%;
     max-width: 700px;
-    margin: auto;
+    margin: 0 auto;
     padding: 25px 16px 50px;
 }
 
-
-/* CARDS */
+/* ==============================
+   CARDS
+============================== */
 
 .card {
+    width: 100%;
     background: #111111;
     border: 1px solid #252525;
     border-radius: 18px;
@@ -61,8 +66,9 @@ body {
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
 }
 
-
-/* CARD TITLE */
+/* ==============================
+   CARD TITLE
+============================== */
 
 .card-title h1 {
     font-size: 23px;
@@ -75,8 +81,9 @@ body {
     line-height: 1.5;
 }
 
-
-/* AMOUNT */
+/* ==============================
+   AMOUNT
+============================== */
 
 .amount-box {
     margin-top: 25px;
@@ -107,21 +114,61 @@ select:focus {
     border-color: #777;
 }
 
-
-/* CURRENCIES */
+/* ==============================
+   CURRENCY ROW
+============================== */
 
 .currency-row {
+    width: 100%;
     display: flex;
-    align-items: end;
+    align-items: flex-end;
     gap: 10px;
     margin-top: 18px;
 }
 
 .currency-box {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
+.currency-box input,
+.currency-box select {
+    width: 100%;
+    min-width: 0;
+}
+
+/* ==============================
+   CURRENCY SEARCH RESULTS
+============================== */
+
+.currency-search-results {
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #080808;
+    border: 1px solid #333;
+    border-radius: 10px;
+    margin-top: 6px;
+}
+
+.currency-search-results div {
+    width: 100%;
+    padding: 12px 14px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+}
+
+.currency-search-results div:hover {
+    background: #1c1c1c;
+}
+
+/* ==============================
+   SWAP BUTTON
+============================== */
+
 .swap-button {
+    flex: 0 0 48px;
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -137,8 +184,9 @@ select:focus {
     background: #292929;
 }
 
-
-/* CONVERT BUTTON */
+/* ==============================
+   CONVERT BUTTON
+============================== */
 
 .convert-button {
     width: 100%;
@@ -158,10 +206,12 @@ select:focus {
     background: #dddddd;
 }
 
-
-/* RESULT */
+/* ==============================
+   RESULT
+============================== */
 
 .result-box {
+    width: 100%;
     background: #080808;
     border: 1px solid #252525;
     border-radius: 14px;
@@ -176,19 +226,25 @@ select:focus {
 }
 
 .result-value {
+    width: 100%;
     font-size: 30px;
     font-weight: bold;
     margin: 10px 0;
-    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .rate-text {
     color: #888;
     font-size: 13px;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
-
-/* SOUTH SUDAN */
+/* ==============================
+   SOUTH SUDAN / COUNTRY RATE
+============================== */
 
 .country-heading {
     display: flex;
@@ -199,6 +255,7 @@ select:focus {
 
 .flag {
     font-size: 36px;
+    flex: 0 0 auto;
 }
 
 .country-heading h2 {
@@ -211,13 +268,20 @@ select:focus {
     margin-top: 4px;
 }
 
+/* ==============================
+   RATE GRID
+============================== */
+
 .rate-grid {
+    width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
 .rate-item {
+    width: 100%;
+    min-width: 0;
     background: #080808;
     border: 1px solid #252525;
     border-radius: 12px;
@@ -232,26 +296,34 @@ select:focus {
 }
 
 .rate-item strong {
+    display: block;
     font-size: 20px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
-
-/* BLACK MARKET */
+/* ==============================
+   BLACK MARKET
+============================== */
 
 .black-market-input {
     margin-top: 20px;
 }
 
 .input-row {
+    width: 100%;
     display: flex;
     gap: 8px;
 }
 
 .input-row input {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .input-row button {
+    flex: 0 0 85px;
     width: 85px;
     border: none;
     border-radius: 10px;
@@ -269,13 +341,16 @@ select:focus {
     margin-top: 8px;
 }
 
-
-/* DIFFERENCE */
+/* ==============================
+   DIFFERENCE
+============================== */
 
 .difference-box {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
     background: #171717;
     border-radius: 12px;
     padding: 16px;
@@ -289,10 +364,12 @@ select:focus {
 
 .difference-box strong {
     font-size: 18px;
+    text-align: right;
 }
 
-
-/* INFO */
+/* ==============================
+   INFO
+============================== */
 
 .info-section {
     padding: 10px 5px;
@@ -315,8 +392,9 @@ select:focus {
     color: #666 !important;
 }
 
-
-/* FOOTER */
+/* ==============================
+   FOOTER
+============================== */
 
 footer {
     text-align: center;
@@ -327,8 +405,9 @@ footer {
     line-height: 1.8;
 }
 
-
-/* MOBILE */
+/* ==============================
+   MOBILE
+============================== */
 
 @media (max-width: 520px) {
 
@@ -350,110 +429,53 @@ footer {
         border-radius: 15px;
     }
 
+    /* Keep From / To controls wide */
     .currency-row {
-        gap: 6px;
-    }
-
-    .swap-button {
-        width: 42px;
-        height: 42px;
-        font-size: 21px;
-    }
-
-    .rate-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* CURRENCY SEARCH FIX */
-
-.currency-box {
-    min-width: 0;
-}
-
-.currency-box input {
-    width: 100%;
-    min-width: 0;
-}
-
-.currency-box select {
-    width: 100%;
-    min-width: 0;
-}
-
-/* Keep currency controls properly sized */
-.currency-row {
-    width: 100%;
-}
-
-.currency-row .currency-box {
-    flex: 1 1 0;
-}
-
-/* SEARCH RESULTS */
-.currency-search-results {
-    width: 100%;
-    max-height: 220px;
-    overflow-y: auto;
-    background: #080808;
-    border: 1px solid #333;
-    border-radius: 10px;
-    margin-top: 6px;
-}
-
-.currency-search-results div {
-    padding: 12px 14px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 14px;
-}
-
-.currency-search-results div:hover {
-    background: #1c1c1c;
-}
-
-/* PREVENT RATE CARDS FROM SQUEEZING */
-.rate-grid {
-    width: 100%;
-}
-
-.rate-item {
-    min-width: 0;
-}
-
-.rate-item strong {
-    display: block;
-    word-break: normal;
-    overflow-wrap: anywhere;
-}
-
-/* RESULT NUMBERS */
-.result-value {
-    overflow-wrap: anywhere;
-    word-break: normal;
-}
-
-/* MOBILE SEARCH LAYOUT */
-@media (max-width: 520px) {
-
-    .currency-row {
-        display: flex;
-        align-items: flex-end;
         gap: 8px;
     }
 
     .currency-box {
+        flex: 1 1 0;
         min-width: 0;
     }
 
-    .currency-box input {
+    .currency-box input,
+    .currency-box select {
         font-size: 14px;
         padding-left: 11px;
         padding-right: 11px;
     }
 
+    /* Smaller swap button */
     .swap-button {
         flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        font-size: 21px;
+    }
+
+    /* Stack market-rate cards on small screens */
+    .rate-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rate-item {
+        width: 100%;
+    }
+
+    /* Keep numbers readable */
+    .rate-item strong {
+        font-size: 19px;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    .result-value {
+        font-size: 28px;
+    }
+
+    .input-row button {
+        flex: 0 0 85px;
+        width: 85px;
     }
 }
-    
