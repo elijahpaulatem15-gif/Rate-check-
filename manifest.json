@@ -1,0 +1,16 @@
+{
+  "name": "Rate Check",
+  "short_name": "Rate Check",
+  "description": "Free currency exchange-rate checker and converter.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    {
+      "src": "file_000000000b20820bb7603403fb4c04a1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
