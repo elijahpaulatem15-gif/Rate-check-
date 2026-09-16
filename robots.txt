@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://elijahpaulatem15-gif.github.io/Rate-check-/sitemap.xml
