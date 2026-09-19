@@ -479,3 +479,20 @@ footer {
         width: 85px;
     }
 }
+.seo-intro {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 700px;
+    padding: 0 15px;
+}
+
+.seo-intro h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.seo-intro p {
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.8;
+    }
