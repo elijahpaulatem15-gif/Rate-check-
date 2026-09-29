@@ -1,13 +1,13 @@
 const API_URL = "https://api.frankfurter.dev/v2";
+const CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
+
+// --------------------------------------------------
+// CURRENCY ELEMENTS
+// --------------------------------------------------
 
 const amountInput = document.getElementById("amount");
 const fromCurrency = document.getElementById("fromCurrency");
 const toCurrency = document.getElementById("toCurrency");
-
-const countryFlag = document.getElementById("countryFlag");
-const countryRateTitle = document.getElementById("countryRateTitle");
-const countryRatePair = document.getElementById("countryRatePair");
-
 
 const convertButton = document.getElementById("convertButton");
 const swapButton = document.getElementById("swapButton");
@@ -15,17 +15,27 @@ const swapButton = document.getElementById("swapButton");
 const resultValue = document.getElementById("resultValue");
 const rateText = document.getElementById("rateText");
 
-const sspMarketRate = document.getElementById("sspMarketRate");
-const sspBlackRate = document.getElementById("sspBlackRate");
-const blackMarketRate = document.getElementById("blackMarketRate");
-const saveBlackRate = document.getElementById("saveBlackRate");
-const rateDifference = document.getElementById("rateDifference");
-
-const sspLocalRate = document.getElementById("sspLocalRate");
-const localMarketRate = document.getElementById("localMarketRate");
-const saveLocalRate = document.getElementById("saveLocalRate");
-
 let currencies = {};
+
+
+// --------------------------------------------------
+// CRYPTO ELEMENTS
+// --------------------------------------------------
+
+const cryptoCurrency =
+    document.getElementById("cryptoCurrency");
+
+const cryptoName =
+    document.getElementById("cryptoName");
+
+const cryptoPrice =
+    document.getElementById("cryptoPrice");
+
+const cryptoChange =
+    document.getElementById("cryptoChange");
+
+const cryptoRefreshButton =
+    document.getElementById("cryptoRefreshButton");
 
 
 // --------------------------------------------------
@@ -36,35 +46,37 @@ async function loadCurrencies() {
 
     try {
 
-        const response = await fetch(`${API_URL}/currencies`);
+        const response =
+            await fetch(`${API_URL}/currencies`);
 
         if (!response.ok) {
             throw new Error("Unable to load currencies");
         }
-const data = await response.json();
 
-currencies = Object.fromEntries(
-  data.map(currency => [
-    currency.iso_code,
-    currency.name
-  ])
-);
-        
+        const data =
+            await response.json();
+
+        currencies = Object.fromEntries(
+            data.map(currency => [
+                currency.iso_code,
+                currency.name
+            ])
+        );
 
         populateCurrencies();
 
-        // Load initial exchange rate
         convertCurrency();
 
     } catch (error) {
 
         console.error(error);
 
-        resultValue.textContent = "Unable to load";
-        rateText.textContent = "Please check your internet connection.";
+        resultValue.textContent =
+            "Unable to load";
 
+        rateText.textContent =
+            "Please check your internet connection.";
     }
-
 }
 
 
@@ -78,148 +90,177 @@ function populateCurrencies() {
     toCurrency.innerHTML = "";
 
     Object.entries(currencies)
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) =>
+            a[0].localeCompare(b[0])
+        )
         .forEach(([code, name]) => {
 
-            const optionFrom = document.createElement("option");
+            const optionFrom =
+                document.createElement("option");
+
             optionFrom.value = code;
-            optionFrom.textContent = `${code} — ${name}`;
 
-            const optionTo = document.createElement("option");
+            optionFrom.textContent =
+                `${code} — ${name}`;
+
+            const optionTo =
+                document.createElement("option");
+
             optionTo.value = code;
-            optionTo.textContent = `${code} — ${name}`;
 
-            fromCurrency.appendChild(optionFrom);
-            toCurrency.appendChild(optionTo);
+            optionTo.textContent =
+                `${code} — ${name}`;
 
+            fromCurrency.appendChild(
+                optionFrom
+            );
+
+            toCurrency.appendChild(
+                optionTo
+            );
         });
 
-// Default currencies
 
-const savedFrom =
-    localStorage.getItem("rateCheckFromCurrency");
+    // --------------------------------------------------
+    // RESTORE SAVED CURRENCIES
+    // --------------------------------------------------
 
-const savedTo =
-    localStorage.getItem("rateCheckToCurrency");
+    const savedFrom =
+        localStorage.getItem(
+            "rateCheckFromCurrency"
+        );
+
+    const savedTo =
+        localStorage.getItem(
+            "rateCheckToCurrency"
+        );
 
 
-if (savedFrom && currencies[savedFrom]) {
+    if (
+        savedFrom &&
+        currencies[savedFrom]
+    ) {
 
-    fromCurrency.value = savedFrom;
+        fromCurrency.value =
+            savedFrom;
 
-} else if (currencies.USD) {
+    } else if (currencies.USD) {
 
-    fromCurrency.value = "USD";
+        fromCurrency.value =
+            "USD";
+    }
 
+
+    if (
+        savedTo &&
+        currencies[savedTo]
+    ) {
+
+        toCurrency.value =
+            savedTo;
+
+    } else if (currencies.EUR) {
+
+        toCurrency.value =
+            "EUR";
+
+    } else if (currencies.GBP) {
+
+        toCurrency.value =
+            "GBP";
+    }
 }
 
-
-if (savedTo && currencies[savedTo]) {
-
-    toCurrency.value = savedTo;
-
-} else if (currencies.SSP) {
-
-    toCurrency.value = "SSP";
-
-} else if (currencies.EUR) {
-
-    toCurrency.value = "EUR";
-
-}
-    
-}
 
 // --------------------------------------------------
-// GET EXCHANGE RATE
+// GET CURRENCY EXCHANGE RATE
 // --------------------------------------------------
 
 async function getRate(from, to) {
+
     if (from === to) {
         return 1;
     }
 
-    const response = await fetch(
-        `${API_URL}/rate/${from}/${to}`
-    );
+
+    const response =
+        await fetch(
+            `${API_URL}/rate/${from}/${to}`
+        );
+
 
     if (!response.ok) {
-        throw new Error("Unable to fetch exchange rate");
+        throw new Error(
+            "Unable to fetch exchange rate"
+        );
     }
 
-    const data = await response.json();
+
+    const data =
+        await response.json();
+
 
     return data.rate;
 }
-
 
 
 // --------------------------------------------------
 // CONVERT CURRENCY
 // --------------------------------------------------
 
-function updateCountryRateHeader(from, to) {
-
-    const fromName = currencies[from] || from;
-    const toName = currencies[to] || to;
-
-    const flags = {
-        USD: "🇺🇸",
-        EUR: "🇪🇺",
-        GBP: "🇬🇧",
-        KES: "🇰🇪",
-        UGX: "🇺🇬",
-        SSP: "🇸🇸",
-        NGN: "🇳🇬",
-        GHS: "🇬🇭",
-        ZAR: "🇿🇦",
-        AED: "🇦🇪",
-        SAR: "🇸🇦",
-        EGP: "🇪🇬",
-        CNY: "🇨🇳",
-        JPY: "🇯🇵",
-        INR: "🇮🇳"
-    };
-
-    countryFlag.textContent = flags[to] || "🌍";
-
-    countryRateTitle.textContent =
-        `${toName} Rate`;
-
-    countryRatePair.textContent =
-        `${from} → ${toName}`;
-        }
-
 async function convertCurrency() {
 
-    const amount = parseFloat(amountInput.value);
+    const amount =
+        parseFloat(amountInput.value);
 
-    const from = fromCurrency.value;
-    const to = toCurrency.value;
+    const from =
+        fromCurrency.value;
 
-updateCountryRateHeader(from, to);
-    
-localStorage.setItem("rateCheckFromCurrency", from);
-localStorage.setItem("rateCheckToCurrency", to);
-    
-    if (!amount || amount < 0) {
+    const to =
+        toCurrency.value;
 
-        resultValue.textContent = "Enter an amount";
-        rateText.textContent = "";
+
+    localStorage.setItem(
+        "rateCheckFromCurrency",
+        from
+    );
+
+    localStorage.setItem(
+        "rateCheckToCurrency",
+        to
+    );
+
+
+    if (
+        !Number.isFinite(amount) ||
+        amount < 0
+    ) {
+
+        resultValue.textContent =
+            "Enter an amount";
+
+        rateText.textContent =
+            "";
 
         return;
     }
 
 
-    resultValue.textContent = "Loading...";
-    rateText.textContent = "Checking the latest market rate...";
+    resultValue.textContent =
+        "Loading...";
+
+    rateText.textContent =
+        "Checking the latest market rate...";
 
 
     try {
 
-        const rate = await getRate(from, to);
+        const rate =
+            await getRate(from, to);
 
-        const converted = amount * rate;
+
+        const converted =
+            amount * rate;
 
 
         resultValue.textContent =
@@ -228,36 +269,55 @@ localStorage.setItem("rateCheckToCurrency", to);
 
         rateText.textContent =
             `1 ${from} = ${formatNumber(rate)} ${to}`;
-// Save conversion to Rate History
-saveRateHistory({
-    amount: amount,
-    from: from,
-    to: to,
-    rate: rate,
-    result: converted
-});
 
-        // If USD → SSP is being displayed,
-        // update the South Sudan section.
 
-        if (from === "USD" && to === "SSP") {
+        saveRateHistory({
+            amount: amount,
+            from: from,
+            to: to,
+            rate: rate,
+            result: converted
+        });
 
-            updateSouthSudanRate(rate);
-
-        }
 
     } catch (error) {
 
         console.error(error);
 
-        resultValue.textContent = "Rate unavailable";
+
+        resultValue.textContent =
+            "Rate unavailable";
+
 
         rateText.textContent =
             "This currency pair is not available from the current data source.";
-
     }
-
 }
+
+
+// --------------------------------------------------
+// SWAP CURRENCIES
+// --------------------------------------------------
+
+function swapCurrencies() {
+
+    const currentFrom =
+        fromCurrency.value;
+
+    const currentTo =
+        toCurrency.value;
+
+
+    fromCurrency.value =
+        currentTo;
+
+    toCurrency.value =
+        currentFrom;
+
+
+    convertCurrency();
+}
+
 
 // --------------------------------------------------
 // RATE HISTORY
@@ -266,26 +326,43 @@ saveRateHistory({
 function saveRateHistory(entry) {
 
     let history =
-        JSON.parse(localStorage.getItem("rateCheckHistory")) || [];
+        JSON.parse(
+            localStorage.getItem(
+                "rateCheckHistory"
+            )
+        ) || [];
+
 
     history.unshift({
+
         amount: entry.amount,
+
         from: entry.from,
+
         to: entry.to,
+
         rate: entry.rate,
+
         result: entry.result
     });
 
-    // Keep only the latest 10 conversions
-    history = history.slice(0, 10);
+
+    // Keep latest 10 conversions
+
+    history =
+        history.slice(0, 10);
+
 
     localStorage.setItem(
         "rateCheckHistory",
         JSON.stringify(history)
     );
 
+
     displayRateHistory();
 }
+
+
 // --------------------------------------------------
 // DISPLAY RATE HISTORY
 // --------------------------------------------------
@@ -293,12 +370,23 @@ function saveRateHistory(entry) {
 function displayRateHistory() {
 
     const historyContainer =
-        document.getElementById("rateHistory");
+        document.getElementById(
+            "rateHistory"
+        );
 
-    if (!historyContainer) return;
+
+    if (!historyContainer) {
+        return;
+    }
+
 
     const history =
-        JSON.parse(localStorage.getItem("rateCheckHistory")) || [];
+        JSON.parse(
+            localStorage.getItem(
+                "rateCheckHistory"
+            )
+        ) || [];
+
 
     if (history.length === 0) {
 
@@ -311,287 +399,211 @@ function displayRateHistory() {
         return;
     }
 
-    historyContainer.innerHTML = history.map(entry => `
 
-        <div class="history-item">
+    historyContainer.innerHTML =
+        history.map(entry => `
 
-            <div class="history-main">
-                ${formatNumber(entry.amount)}
-                ${entry.from}
-                → 
-                ${formatNumber(entry.result)}
-                ${entry.to}
+            <div class="history-item">
+
+                <div class="history-main">
+
+                    ${formatNumber(entry.amount)}
+                    ${entry.from}
+                    →
+                    ${formatNumber(entry.result)}
+                    ${entry.to}
+
+                </div>
+
+                <div class="history-rate">
+
+                    1 ${entry.from}
+                    =
+                    ${formatNumber(entry.rate)}
+                    ${entry.to}
+
+                </div>
+
             </div>
 
-            <div class="history-rate">
-                1 ${entry.from} =
-                ${formatNumber(entry.rate)}
-                ${entry.to}
-            </div>
+        `).join("");
+}
 
-        </div>
-
-    `).join("");
-        }
 
 // --------------------------------------------------
 // CLEAR RATE HISTORY
 // --------------------------------------------------
 
 const clearHistoryButton =
-    document.getElementById("clearHistory");
-
-clearHistoryButton.addEventListener("click", function () {
-
-    localStorage.removeItem("rateCheckHistory");
-
-    displayRateHistory();
-
-});
-
-// --------------------------------------------------
-// CURRENCY SEARCH
-// --------------------------------------------------
-
-const fromCurrencySearch =
-    document.getElementById("fromCurrencySearch");
-
-const toCurrencySearch =
-    document.getElementById("toCurrencySearch");
-
-
-function filterCurrencySelect(
-    searchInput,
-    selectElement
-) {
-
-    const searchText =
-        searchInput.value.toLowerCase().trim();
-
-    const currentValue =
-        selectElement.value;
-
-    selectElement.innerHTML = "";
-
-    Object.entries(currencies)
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .filter(([code, name]) => {
-
-            const text =
-                `${code} ${name}`.toLowerCase();
-
-            return text.includes(searchText);
-
-        })
-        .forEach(([code, name]) => {
-
-            const option =
-                document.createElement("option");
-
-            option.value = code;
-            option.textContent =
-                `${code} — ${name}`;
-
-            selectElement.appendChild(option);
-
-        });
-
-    if (
-        currencies[currentValue] &&
-        [...selectElement.options]
-            .some(option =>
-                option.value === currentValue
-            )
-    ) {
-        selectElement.value = currentValue;
-    }
-}
-
-
-fromCurrencySearch.addEventListener(
-    "input",
-    function () {
-        filterCurrencySelect(
-            fromCurrencySearch,
-            fromCurrency
-        );
-    }
-);
-
-
-toCurrencySearch.addEventListener(
-    "input",
-    function () {
-        filterCurrencySelect(
-            toCurrencySearch,
-            toCurrency
-        );
-    }
-);
-
-// --------------------------------------------------
-// SOUTH SUDAN RATE
-// --------------------------------------------------
-
-function updateSouthSudanRate(rate) {
-
-    if (!rate) return;
-
-    sspMarketRate.textContent =
-        `${formatNumber(rate)} SSP`;
-
-    calculateDifference();
-
-}
-
-// --------------------------------------------------
-// LOCAL MARKET RATE
-// --------------------------------------------------
-
-function loadSavedLocalMarketRate() {
-
-    const savedRate =
-        localStorage.getItem("rateCheckLocalMarketSSP");
-
-    if (savedRate) {
-
-        localMarketRate.value = savedRate;
-
-        sspLocalRate.textContent =
-            `${formatNumber(parseFloat(savedRate))} SSP`;
-
-    }
-
-}
-
-
-saveLocalRate.addEventListener("click", function () {
-
-    const value = parseFloat(localMarketRate.value);
-
-    if (!value || value <= 0) {
-
-        alert("Please enter a valid local market rate.");
-
-        return;
-    }
-
-    localStorage.setItem(
-        "rateCheckLocalMarketSSP",
-        value
+    document.getElementById(
+        "clearHistory"
     );
 
-    sspLocalRate.textContent =
-        `${formatNumber(value)} SSP`;
 
-});
-    
+if (clearHistoryButton) {
 
-// --------------------------------------------------
-// BLACK MARKET RATE
-// --------------------------------------------------
+    clearHistoryButton.addEventListener(
+        "click",
+        function () {
 
-function loadSavedBlackMarketRate() {
+            localStorage.removeItem(
+                "rateCheckHistory"
+            );
 
-    const savedRate =
-        localStorage.getItem("rateCheckBlackMarketSSP");
-
-    if (savedRate) {
-
-        blackMarketRate.value = savedRate;
-
-        sspBlackRate.textContent =
-            `${formatNumber(parseFloat(savedRate))} SSP`;
-
-    }
-
+            displayRateHistory();
+        }
+    );
 }
 
 
-saveBlackRate.addEventListener("click", async function () {
+// --------------------------------------------------
+// CRYPTOCURRENCY RATE
+// --------------------------------------------------
 
-    const value = parseFloat(blackMarketRate.value);
+async function loadCryptoRate() {
 
-    if (!value || value <= 0) {
+    const cryptoId =
+        cryptoCurrency.value;
 
-        alert("Please enter a valid black-market rate.");
 
+    if (!cryptoId) {
         return;
     }
 
 
-    localStorage.setItem(
-        "rateCheckBlackMarketSSP",
-        value
-    );
+    cryptoPrice.textContent =
+        "Loading...";
 
+    cryptoChange.textContent =
+        "Checking latest rate...";
 
-    sspBlackRate.textContent =
-        `${formatNumber(value)} SSP`;
-
-
-    // Get current market rate so we can
-    // calculate the difference.
 
     try {
 
-        const marketRate =
-            await getRate("USD", "SSP");
+        const response =
+            await fetch(
+                `${CRYPTO_API_URL}?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true`
+            );
 
-        calculateDifference();
+
+        if (!response.ok) {
+            throw new Error(
+                "Unable to load cryptocurrency rate"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const cryptoData =
+            data[cryptoId];
+
+
+        if (!cryptoData) {
+            throw new Error(
+                "Cryptocurrency data unavailable"
+            );
+        }
+
+
+        const price =
+            cryptoData.usd;
+
+
+        const change =
+            cryptoData.usd_24h_change;
+
+
+        const selectedOption =
+            cryptoCurrency.options[
+                cryptoCurrency.selectedIndex
+            ];
+
+
+        cryptoName.textContent =
+            selectedOption.textContent;
+
+
+        cryptoPrice.textContent =
+            `$${formatNumber(price)}`;
+
+
+        if (
+            Number.isFinite(change)
+        ) {
+
+            const sign =
+                change >= 0
+                    ? "+"
+                    : "";
+
+
+            cryptoChange.textContent =
+                `${sign}${change.toFixed(2)}% (24h)`;
+
+        } else {
+
+            cryptoChange.textContent =
+                "24h change unavailable";
+        }
+
 
     } catch (error) {
 
-        console.log(
-            "Market rate unavailable for comparison."
-        );
+        console.error(error);
 
+
+        cryptoPrice.textContent =
+            "Rate unavailable";
+
+
+        cryptoChange.textContent =
+            "Unable to load cryptocurrency data.";
     }
-
-});
-
-
-// --------------------------------------------------
-// CALCULATE BLACK MARKET DIFFERENCE
-// --------------------------------------------------
-
-function calculateDifference() {
-
-    const localRate =
-        parseFloat(localMarketRate.value);
-
-    const blackRate =
-        parseFloat(blackMarketRate.value);
-
-
-    if (!localRate || !blackRate) {
-
-        rateDifference.textContent = "—";
-
-        return;
-    }
-
-
-    const difference =
-        blackRate - localRate;
-
-
-    const percentage =
-        (difference / localRate) * 100;
-
-
-    rateDifference.textContent =
-        `${formatNumber(difference)} SSP (${percentage.toFixed(2)}%)`;
-
 }
 
+
 // --------------------------------------------------
-// BUTTON
+// CRYPTOCURRENCY EVENTS
+// --------------------------------------------------
+
+if (cryptoRefreshButton) {
+
+    cryptoRefreshButton.addEventListener(
+        "click",
+        loadCryptoRate
+    );
+}
+
+
+if (cryptoCurrency) {
+
+    cryptoCurrency.addEventListener(
+        "change",
+        loadCryptoRate
+    );
+}
+
+
+// --------------------------------------------------
+// CONVERTER BUTTON
 // --------------------------------------------------
 
 convertButton.addEventListener(
     "click",
     convertCurrency
+);
+
+
+// --------------------------------------------------
+// SWAP BUTTON
+// --------------------------------------------------
+
+swapButton.addEventListener(
+    "click",
+    swapCurrencies
 );
 
 
@@ -606,9 +618,7 @@ amountInput.addEventListener(
         if (event.key === "Enter") {
 
             convertCurrency();
-
         }
-
     }
 );
 
@@ -630,7 +640,6 @@ function formatNumber(number) {
             maximumFractionDigits: 4
         }
     ).format(number);
-
 }
 
 
@@ -640,5 +649,6 @@ function formatNumber(number) {
 
 loadCurrencies();
 
-loadSavedBlackMarketRate();
 displayRateHistory();
+
+loadCryptoRate();
