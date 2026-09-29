@@ -42,7 +42,7 @@ body {
 }
 
 /* ==============================
-   MAIN
+   MAIN CONTAINER
 ============================== */
 
 .container {
@@ -56,7 +56,9 @@ body {
    CARDS
 ============================== */
 
-.card {
+.card,
+.crypto-card,
+.history-card {
     width: 100%;
     background: #111111;
     border: 1px solid #252525;
@@ -67,7 +69,7 @@ body {
 }
 
 /* ==============================
-   CARD TITLE
+   CARD TITLES
 ============================== */
 
 .card-title h1 {
@@ -81,13 +83,23 @@ body {
     line-height: 1.5;
 }
 
-/* ==============================
-   AMOUNT
-============================== */
-
-.amount-box {
-    margin-top: 25px;
+.crypto-card h2,
+.history-card h2 {
+    font-size: 21px;
+    margin-bottom: 7px;
 }
+
+.crypto-card > p,
+.history-card > p {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* ==============================
+   LABELS
+============================== */
 
 label {
     display: block;
@@ -96,12 +108,16 @@ label {
     margin-bottom: 8px;
 }
 
+/* ==============================
+   INPUTS & SELECTS
+============================== */
+
 input,
 select {
     width: 100%;
     height: 50px;
     background: #080808;
-    color: #fff;
+    color: #ffffff;
     border: 1px solid #333;
     border-radius: 10px;
     padding: 0 14px;
@@ -112,6 +128,14 @@ select {
 input:focus,
 select:focus {
     border-color: #777;
+}
+
+/* ==============================
+   AMOUNT
+============================== */
+
+.amount-box {
+    margin-top: 25px;
 }
 
 /* ==============================
@@ -131,36 +155,9 @@ select:focus {
     min-width: 0;
 }
 
-.currency-box input,
 .currency-box select {
     width: 100%;
     min-width: 0;
-}
-
-/* ==============================
-   CURRENCY SEARCH RESULTS
-============================== */
-
-.currency-search-results {
-    width: 100%;
-    max-height: 220px;
-    overflow-y: auto;
-    background: #080808;
-    border: 1px solid #333;
-    border-radius: 10px;
-    margin-top: 6px;
-}
-
-.currency-search-results div {
-    width: 100%;
-    padding: 12px 14px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 14px;
-}
-
-.currency-search-results div:hover {
-    background: #1c1c1c;
 }
 
 /* ==============================
@@ -174,7 +171,7 @@ select:focus {
     border-radius: 50%;
     border: 1px solid #333;
     background: #1c1c1c;
-    color: white;
+    color: #ffffff;
     font-size: 25px;
     cursor: pointer;
     transition: 0.2s;
@@ -230,166 +227,139 @@ select:focus {
     font-size: 30px;
     font-weight: bold;
     margin: 10px 0;
-    white-space: normal;
     overflow-wrap: break-word;
-    word-break: normal;
 }
 
 .rate-text {
     color: #888;
     font-size: 13px;
-    white-space: normal;
     overflow-wrap: break-word;
 }
 
 /* ==============================
-   SOUTH SUDAN / COUNTRY RATE
+   CRYPTOCURRENCY
 ============================== */
 
-.country-heading {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-bottom: 20px;
-}
-
-.flag {
-    font-size: 36px;
-    flex: 0 0 auto;
-}
-
-.country-heading h2 {
-    font-size: 20px;
-}
-
-.country-heading p {
-    color: #888;
-    font-size: 13px;
-    margin-top: 4px;
-}
-
-/* ==============================
-   RATE GRID
-============================== */
-
-.rate-grid {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.rate-item {
-    width: 100%;
-    min-width: 0;
-    background: #080808;
-    border: 1px solid #252525;
-    border-radius: 12px;
-    padding: 16px;
-}
-
-.rate-item span {
-    display: block;
-    color: #888;
-    font-size: 12px;
-    margin-bottom: 8px;
-}
-
-.rate-item strong {
-    display: block;
-    font-size: 20px;
-    white-space: normal;
-    overflow-wrap: break-word;
-    word-break: normal;
-}
-
-/* ==============================
-   BLACK MARKET
-============================== */
-
-.black-market-input {
+.crypto-card {
     margin-top: 20px;
 }
 
-.input-row {
+.crypto-selector {
+    margin-top: 5px;
+}
+
+.crypto-info {
+    margin-top: 18px;
+    background: #080808;
+    border: 1px solid #252525;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+}
+
+.crypto-info h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.crypto-price {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    overflow-wrap: break-word;
+}
+
+.crypto-change {
+    color: #999;
+    font-size: 13px;
+}
+
+.crypto-refresh-button {
     width: 100%;
-    display: flex;
-    gap: 8px;
-}
-
-.input-row input {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.input-row button {
-    flex: 0 0 85px;
-    width: 85px;
-    border: none;
+    height: 48px;
+    margin-top: 15px;
+    border: 1px solid #333;
     border-radius: 10px;
-    background: #ffffff;
-    color: #000000;
+    background: #1c1c1c;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.crypto-refresh-button:hover {
+    background: #292929;
+}
+
+/* ==============================
+   HISTORY
+============================== */
+
+.history-card {
+    margin-top: 20px;
+}
+
+#rateHistory {
+    width: 100%;
+}
+
+.history-item {
+    width: 100%;
+    background: #080808;
+    border: 1px solid #252525;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    color: #ddd;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.history-empty {
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 15px 0;
+}
+
+#clearHistory {
+    width: 100%;
+    height: 46px;
+    margin-top: 15px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #1c1c1c;
+    color: #ffffff;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
 }
 
-.black-market-input small {
-    display: block;
-    color: #666;
-    font-size: 11px;
-    line-height: 1.5;
-    margin-top: 8px;
+#clearHistory:hover {
+    background: #292929;
 }
 
 /* ==============================
-   DIFFERENCE
+   SEO INTRO
 ============================== */
 
-.difference-box {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    background: #171717;
-    border-radius: 12px;
-    padding: 16px;
-    margin-top: 18px;
+.seo-intro {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 700px;
+    padding: 0 15px;
 }
 
-.difference-box span {
+.seo-intro h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.seo-intro p {
+    font-size: 15px;
+    line-height: 1.6;
     color: #999;
-    font-size: 13px;
-}
-
-.difference-box strong {
-    font-size: 18px;
-    text-align: right;
-}
-
-/* ==============================
-   INFO
-============================== */
-
-.info-section {
-    padding: 10px 5px;
-}
-
-.info-section h2 {
-    font-size: 20px;
-    margin-bottom: 12px;
-}
-
-.info-section p {
-    color: #999;
-    font-size: 14px;
-    line-height: 1.7;
-}
-
-.disclaimer {
-    margin-top: 12px;
-    font-size: 12px !important;
-    color: #666 !important;
 }
 
 /* ==============================
@@ -419,17 +389,22 @@ footer {
         font-size: 23px;
     }
 
+    .logo-icon {
+        font-size: 26px;
+    }
+
     .container {
         padding-left: 12px;
         padding-right: 12px;
     }
 
-    .card {
+    .card,
+    .crypto-card,
+    .history-card {
         padding: 17px;
         border-radius: 15px;
     }
 
-    /* Keep From / To controls wide */
     .currency-row {
         gap: 8px;
     }
@@ -439,14 +414,12 @@ footer {
         min-width: 0;
     }
 
-    .currency-box input,
     .currency-box select {
         font-size: 14px;
-        padding-left: 11px;
-        padding-right: 11px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
-    /* Smaller swap button */
     .swap-button {
         flex: 0 0 42px;
         width: 42px;
@@ -454,45 +427,16 @@ footer {
         font-size: 21px;
     }
 
-    /* Stack market-rate cards on small screens */
-    .rate-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .rate-item {
-        width: 100%;
-    }
-
-    /* Keep numbers readable */
-    .rate-item strong {
-        font-size: 19px;
-        white-space: normal;
-        overflow-wrap: break-word;
-    }
-
     .result-value {
-        font-size: 28px;
+        font-size: 27px;
     }
 
-    .input-row button {
-        flex: 0 0 85px;
-        width: 85px;
+    .crypto-price {
+        font-size: 25px;
     }
-}
-.seo-intro {
-    text-align: center;
-    margin: 20px auto;
-    max-width: 700px;
-    padding: 0 15px;
-}
 
-.seo-intro h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-
-.seo-intro p {
-    font-size: 15px;
-    line-height: 1.6;
-    opacity: 0.8;
+    .crypto-card h2,
+    .history-card h2 {
+        font-size: 19px;
+    }
     }
