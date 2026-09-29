@@ -1,100 +1,234 @@
 const API_URL = "https://api.frankfurter.dev/v2";
 const CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
 
-// --------------------------------------------------
-// CURRENCY ELEMENTS
-// --------------------------------------------------
-
-const amountInput = document.getElementById("amount");
-const fromCurrency = document.getElementById("fromCurrency");
-const toCurrency = document.getElementById("toCurrency");
-
-const convertButton = document.getElementById("convertButton");
-const swapButton = document.getElementById("swapButton");
-
-const resultValue = document.getElementById("resultValue");
-const rateText = document.getElementById("rateText");
-
 let currencies = {};
 
+let amountInput;
+let fromCurrency;
+let toCurrency;
+let convertButton;
+let swapButton;
+let resultValue;
+let rateText;
 
-// --------------------------------------------------
-// CRYPTO ELEMENTS
-// --------------------------------------------------
+let cryptoCurrency;
+let cryptoName;
+let cryptoPrice;
+let cryptoChange;
+let cryptoRefreshButton;
 
-const cryptoCurrency =
-    document.getElementById("cryptoCurrency");
-
-const cryptoName =
-    document.getElementById("cryptoName");
-
-const cryptoPrice =
-    document.getElementById("cryptoPrice");
-
-const cryptoChange =
-    document.getElementById("cryptoChange");
-
-const cryptoRefreshButton =
-    document.getElementById("cryptoRefreshButton");
+let rateHistory;
+let clearHistory;
 
 
-// --------------------------------------------------
+// ===============================
+// START APP
+// ===============================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    amountInput = document.getElementById("amount");
+    fromCurrency = document.getElementById("fromCurrency");
+    toCurrency = document.getElementById("toCurrency");
+
+    convertButton = document.getElementById("convertButton");
+    swapButton = document.getElementById("swapButton");
+
+    resultValue = document.getElementById("resultValue");
+    rateText = document.getElementById("rateText");
+
+    cryptoCurrency = document.getElementById("cryptoCurrency");
+    cryptoName = document.getElementById("cryptoName");
+    cryptoPrice = document.getElementById("cryptoPrice");
+    cryptoChange = document.getElementById("cryptoChange");
+    cryptoRefreshButton =
+        document.getElementById("cryptoRefreshButton");
+
+    rateHistory = document.getElementById("rateHistory");
+    clearHistory = document.getElementById("clearHistory");
+
+
+    // Currency buttons
+    if (convertButton) {
+        convertButton.addEventListener(
+            "click",
+            convertCurrency
+        );
+    }
+
+    if (swapButton) {
+        swapButton.addEventListener(
+            "click",
+            swapCurrencies
+        );
+    }
+
+    if (amountInput) {
+        amountInput.addEventListener(
+            "keydown",
+            event => {
+                if (event.key === "Enter") {
+                    convertCurrency();
+                }
+            }
+        );
+    }
+
+
+    // Crypto
+    if (cryptoCurrency) {
+        cryptoCurrency.addEventListener(
+            "change",
+            loadCryptoRate
+        );
+    }
+
+    if (cryptoRefreshButton) {
+        cryptoRefreshButton.addEventListener(
+            "click",
+            loadCryptoRate
+        );
+    }
+
+
+    // History
+    if (clearHistory) {
+        clearHistory.addEventListener(
+            "click",
+            clearRateHistory
+        );
+    }
+
+
+    // Start
+    loadCurrencies();
+    displayRateHistory();
+    loadCryptoRate();
+});
+
+
+// ===============================
 // LOAD CURRENCIES
-// --------------------------------------------------
+// ===============================
 
 async function loadCurrencies() {
+
+    if (!fromCurrency || !toCurrency) {
+        console.error(
+            "Currency selectors were not found."
+        );
+        return;
+    }
+
     try {
-        const response = await fetch(`${API_URL}/currencies`);
+
+        const response = await fetch(
+            `${API_URL}/currencies`,
+            {
+                cache: "no-store"
+            }
+        );
 
         if (!response.ok) {
-            throw new Error("Unable to load currencies");
+            throw new Error(
+                `Currency API error: ${response.status}`
+            );
         }
 
         const data = await response.json();
 
+        if (!Array.isArray(data)) {
+            throw new Error(
+                "Currency API returned invalid data."
+            );
+        }
+
         currencies = {};
 
         data.forEach(currency => {
-            const code = currency.iso_code;
-            const name = currency.name;
 
-            if (code && name) {
-                currencies[code] = name;
+            if (
+                currency &&
+                currency.iso_code &&
+                currency.name
+            ) {
+
+                currencies[
+                    currency.iso_code
+                ] = currency.name;
+
             }
+
         });
 
+        if (
+            Object.keys(currencies).length === 0
+        ) {
+            throw new Error(
+                "No currencies were loaded."
+            );
+        }
+
         populateCurrencies();
-        convertCurrency();
+
+        console.log(
+            "Currencies loaded:",
+            Object.keys(currencies).length
+        );
+
+        await convertCurrency();
 
     } catch (error) {
-        console.error("Currency loading error:", error);
 
-        fromCurrency.innerHTML = '<option value="">Currencies unavailable</option>';
-        toCurrency.innerHTML = '<option value="">Currencies unavailable</option>';
+        console.error(
+            "Currency loading error:",
+            error
+        );
+
+        fromCurrency.innerHTML =
+            '<option value="">Unable to load currencies</option>';
+
+        toCurrency.innerHTML =
+            '<option value="">Unable to load currencies</option>';
+
+        if (resultValue) {
+            resultValue.textContent = "—";
+        }
+
+        if (rateText) {
+            rateText.textContent =
+                "Currency data could not be loaded.";
+        }
     }
-            }
+}
 
 
-// --------------------------------------------------
+// ===============================
 // POPULATE CURRENCY SELECTORS
-// --------------------------------------------------
+// ===============================
 
 function populateCurrencies() {
+
+    if (!fromCurrency || !toCurrency) {
+        return;
+    }
 
     fromCurrency.innerHTML = "";
     toCurrency.innerHTML = "";
 
-    Object.entries(currencies)
-        .sort((a, b) =>
-            a[0].localeCompare(b[0])
-        )
-        .forEach(([code, name]) => {
+    const currencyList =
+        Object.entries(currencies)
+            .sort((a, b) =>
+                a[0].localeCompare(b[0])
+            );
+
+    currencyList.forEach(
+        ([code, name]) => {
 
             const optionFrom =
                 document.createElement("option");
 
             optionFrom.value = code;
-
             optionFrom.textContent =
                 `${code} — ${name}`;
 
@@ -102,7 +236,6 @@ function populateCurrencies() {
                 document.createElement("option");
 
             optionTo.value = code;
-
             optionTo.textContent =
                 `${code} — ${name}`;
 
@@ -113,13 +246,11 @@ function populateCurrencies() {
             toCurrency.appendChild(
                 optionTo
             );
-        });
+        }
+    );
 
 
-    // --------------------------------------------------
-    // RESTORE SAVED CURRENCIES
-    // --------------------------------------------------
-
+    // Restore saved currencies
     const savedFrom =
         localStorage.getItem(
             "rateCheckFromCurrency"
@@ -131,6 +262,7 @@ function populateCurrencies() {
         );
 
 
+    // From currency
     if (
         savedFrom &&
         currencies[savedFrom]
@@ -143,9 +275,15 @@ function populateCurrencies() {
 
         fromCurrency.value =
             "USD";
+
+    } else if (currencyList.length > 0) {
+
+        fromCurrency.value =
+            currencyList[0][0];
     }
 
 
+    // To currency
     if (
         savedTo &&
         currencies[savedTo]
@@ -163,67 +301,92 @@ function populateCurrencies() {
 
         toCurrency.value =
             "GBP";
+
+    } else if (currencyList.length > 1) {
+
+        toCurrency.value =
+            currencyList[1][0];
+
+    } else if (currencyList.length > 0) {
+
+        toCurrency.value =
+            currencyList[0][0];
     }
 }
 
 
-// --------------------------------------------------
-// GET CURRENCY EXCHANGE RATE
-// --------------------------------------------------
+// ===============================
+// GET EXCHANGE RATE
+// ===============================
 
 async function getRate(from, to) {
 
+    if (!from || !to) {
+        throw new Error(
+            "Currency not selected."
+        );
+    }
+
+    // Same currency
     if (from === to) {
         return 1;
     }
 
-
-    const response =
-        await fetch(
-            `${API_URL}/rate/${from}/${to}`
-        );
-
+    const response = await fetch(
+        `${API_URL}/rate/${from}/${to}`,
+        {
+            cache: "no-store"
+        }
+    );
 
     if (!response.ok) {
         throw new Error(
-            "Unable to fetch exchange rate"
+            `Unable to fetch exchange rate: ${response.status}`
         );
     }
-
 
     const data =
         await response.json();
 
+    if (
+        !data ||
+        typeof data.rate !== "number"
+    ) {
+        throw new Error(
+            "Invalid exchange rate."
+        );
+    }
 
     return data.rate;
 }
 
 
-// --------------------------------------------------
+// ===============================
 // CONVERT CURRENCY
-// --------------------------------------------------
+// ===============================
 
 async function convertCurrency() {
 
+    if (
+        !amountInput ||
+        !fromCurrency ||
+        !toCurrency ||
+        !resultValue ||
+        !rateText
+    ) {
+        return;
+    }
+
     const amount =
-        parseFloat(amountInput.value);
+        parseFloat(
+            amountInput.value
+        );
 
     const from =
         fromCurrency.value;
 
     const to =
         toCurrency.value;
-
-
-    localStorage.setItem(
-        "rateCheckFromCurrency",
-        from
-    );
-
-    localStorage.setItem(
-        "rateCheckToCurrency",
-        to
-    );
 
 
     if (
@@ -241,6 +404,30 @@ async function convertCurrency() {
     }
 
 
+    if (!from || !to) {
+
+        resultValue.textContent =
+            "Select currencies";
+
+        rateText.textContent =
+            "";
+
+        return;
+    }
+
+
+    // Save selections
+    localStorage.setItem(
+        "rateCheckFromCurrency",
+        from
+    );
+
+    localStorage.setItem(
+        "rateCheckToCurrency",
+        to
+    );
+
+
     resultValue.textContent =
         "Loading...";
 
@@ -251,8 +438,10 @@ async function convertCurrency() {
     try {
 
         const rate =
-            await getRate(from, to);
-
+            await getRate(
+                from,
+                to
+            );
 
         const converted =
             amount * rate;
@@ -260,7 +449,6 @@ async function convertCurrency() {
 
         resultValue.textContent =
             `${formatNumber(converted)} ${to}`;
-
 
         rateText.textContent =
             `1 ${from} = ${formatNumber(rate)} ${to}`;
@@ -277,12 +465,13 @@ async function convertCurrency() {
 
     } catch (error) {
 
-        console.error(error);
-
+        console.error(
+            "Conversion error:",
+            error
+        );
 
         resultValue.textContent =
             "Rate unavailable";
-
 
         rateText.textContent =
             "This currency pair is not available from the current data source.";
@@ -290,11 +479,18 @@ async function convertCurrency() {
 }
 
 
-// --------------------------------------------------
+// ===============================
 // SWAP CURRENCIES
-// --------------------------------------------------
+// ===============================
 
 function swapCurrencies() {
+
+    if (
+        !fromCurrency ||
+        !toCurrency
+    ) {
+        return;
+    }
 
     const currentFrom =
         fromCurrency.value;
@@ -302,332 +498,25 @@ function swapCurrencies() {
     const currentTo =
         toCurrency.value;
 
-
     fromCurrency.value =
         currentTo;
 
     toCurrency.value =
         currentFrom;
 
-
     convertCurrency();
 }
 
 
-// --------------------------------------------------
-// RATE HISTORY
-// --------------------------------------------------
-
-function saveRateHistory(entry) {
-
-    let history =
-        JSON.parse(
-            localStorage.getItem(
-                "rateCheckHistory"
-            )
-        ) || [];
-
-
-    history.unshift({
-
-        amount: entry.amount,
-
-        from: entry.from,
-
-        to: entry.to,
-
-        rate: entry.rate,
-
-        result: entry.result
-    });
-
-
-    // Keep latest 10 conversions
-
-    history =
-        history.slice(0, 10);
-
-
-    localStorage.setItem(
-        "rateCheckHistory",
-        JSON.stringify(history)
-    );
-
-
-    displayRateHistory();
-}
-
-
-// --------------------------------------------------
-// DISPLAY RATE HISTORY
-// --------------------------------------------------
-
-function displayRateHistory() {
-
-    const historyContainer =
-        document.getElementById(
-            "rateHistory"
-        );
-
-
-    if (!historyContainer) {
-        return;
-    }
-
-
-    const history =
-        JSON.parse(
-            localStorage.getItem(
-                "rateCheckHistory"
-            )
-        ) || [];
-
-
-    if (history.length === 0) {
-
-        historyContainer.innerHTML = `
-            <p class="history-empty">
-                No rate history yet.
-            </p>
-        `;
-
-        return;
-    }
-
-
-    historyContainer.innerHTML =
-        history.map(entry => `
-
-            <div class="history-item">
-
-                <div class="history-main">
-
-                    ${formatNumber(entry.amount)}
-                    ${entry.from}
-                    →
-                    ${formatNumber(entry.result)}
-                    ${entry.to}
-
-                </div>
-
-                <div class="history-rate">
-
-                    1 ${entry.from}
-                    =
-                    ${formatNumber(entry.rate)}
-                    ${entry.to}
-
-                </div>
-
-            </div>
-
-        `).join("");
-}
-
-
-// --------------------------------------------------
-// CLEAR RATE HISTORY
-// --------------------------------------------------
-
-const clearHistoryButton =
-    document.getElementById(
-        "clearHistory"
-    );
-
-
-if (clearHistoryButton) {
-
-    clearHistoryButton.addEventListener(
-        "click",
-        function () {
-
-            localStorage.removeItem(
-                "rateCheckHistory"
-            );
-
-            displayRateHistory();
-        }
-    );
-}
-
-
-// --------------------------------------------------
-// CRYPTOCURRENCY RATE
-// --------------------------------------------------
-
-async function loadCryptoRate() {
-
-    const cryptoId =
-        cryptoCurrency.value;
-
-
-    if (!cryptoId) {
-        return;
-    }
-
-
-    cryptoPrice.textContent =
-        "Loading...";
-
-    cryptoChange.textContent =
-        "Checking latest rate...";
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${CRYPTO_API_URL}?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true`
-            );
-
-
-        if (!response.ok) {
-            throw new Error(
-                "Unable to load cryptocurrency rate"
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        const cryptoData =
-            data[cryptoId];
-
-
-        if (!cryptoData) {
-            throw new Error(
-                "Cryptocurrency data unavailable"
-            );
-        }
-
-
-        const price =
-            cryptoData.usd;
-
-
-        const change =
-            cryptoData.usd_24h_change;
-
-
-        const selectedOption =
-            cryptoCurrency.options[
-                cryptoCurrency.selectedIndex
-            ];
-
-
-        cryptoName.textContent =
-            selectedOption.textContent;
-
-
-        cryptoPrice.textContent =
-            `$${formatNumber(price)}`;
-
-
-        if (
-            Number.isFinite(change)
-        ) {
-
-            const sign =
-                change >= 0
-                    ? "+"
-                    : "";
-
-
-            cryptoChange.textContent =
-                `${sign}${change.toFixed(2)}% (24h)`;
-
-        } else {
-
-            cryptoChange.textContent =
-                "24h change unavailable";
-        }
-
-
-    } catch (error) {
-
-        console.error(error);
-
-
-        cryptoPrice.textContent =
-            "Rate unavailable";
-
-
-        cryptoChange.textContent =
-            "Unable to load cryptocurrency data.";
-    }
-}
-
-
-// --------------------------------------------------
-// CRYPTOCURRENCY EVENTS
-// --------------------------------------------------
-
-if (cryptoRefreshButton) {
-
-    cryptoRefreshButton.addEventListener(
-        "click",
-        loadCryptoRate
-    );
-}
-
-
-if (cryptoCurrency) {
-
-    cryptoCurrency.addEventListener(
-        "change",
-        loadCryptoRate
-    );
-}
-
-
-// --------------------------------------------------
-// CONVERTER BUTTON
-// --------------------------------------------------
-
-convertButton.addEventListener(
-    "click",
-    convertCurrency
-);
-
-
-// --------------------------------------------------
-// SWAP BUTTON
-// --------------------------------------------------
-
-swapButton.addEventListener(
-    "click",
-    swapCurrencies
-);
-
-
-// --------------------------------------------------
-// ENTER KEY
-// --------------------------------------------------
-
-amountInput.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (event.key === "Enter") {
-
-            convertCurrency();
-        }
-    }
-);
-
-
-// --------------------------------------------------
-// NUMBER FORMATTER
-// --------------------------------------------------
+// ===============================
+// FORMAT NUMBERS
+// ===============================
 
 function formatNumber(number) {
 
     if (!Number.isFinite(number)) {
         return "—";
     }
-
 
     return new Intl.NumberFormat(
         "en-US",
@@ -638,12 +527,250 @@ function formatNumber(number) {
 }
 
 
-// --------------------------------------------------
-// START APPLICATION
-// --------------------------------------------------
+// ===============================
+// RATE HISTORY
+// ===============================
 
-loadCurrencies();
+function saveRateHistory(item) {
 
-displayRateHistory();
+    try {
 
-loadCryptoRate();
+        let history =
+            JSON.parse(
+                localStorage.getItem(
+                    "rateCheckHistory"
+                ) || "[]"
+            );
+
+        history.unshift({
+            ...item,
+            date: new Date().toISOString()
+        });
+
+        // Keep latest 10
+        history =
+            history.slice(0, 10);
+
+        localStorage.setItem(
+            "rateCheckHistory",
+            JSON.stringify(history)
+        );
+
+        displayRateHistory();
+
+    } catch (error) {
+
+        console.error(
+            "Could not save history:",
+            error
+        );
+    }
+}
+
+
+// ===============================
+// DISPLAY HISTORY
+// ===============================
+
+function displayRateHistory() {
+
+    if (!rateHistory) {
+        return;
+    }
+
+    try {
+
+        const history =
+            JSON.parse(
+                localStorage.getItem(
+                    "rateCheckHistory"
+                ) || "[]"
+            );
+
+
+        if (
+            !Array.isArray(history) ||
+            history.length === 0
+        ) {
+
+            rateHistory.innerHTML =
+                "<p>No rate history yet.</p>";
+
+            return;
+        }
+
+
+        rateHistory.innerHTML =
+            history.map(item => {
+
+                return `
+                    <div class="history-item">
+
+                        <strong>
+                            ${formatNumber(item.amount)}
+                            ${item.from}
+                            →
+                            ${formatNumber(item.result)}
+                            ${item.to}
+                        </strong>
+
+                        <span>
+                            1 ${item.from}
+                            =
+                            ${formatNumber(item.rate)}
+                            ${item.to}
+                        </span>
+
+                    </div>
+                `;
+
+            }).join("");
+
+
+    } catch (error) {
+
+        console.error(
+            "Could not display history:",
+            error
+        );
+    }
+}
+
+
+// ===============================
+// CLEAR HISTORY
+// ===============================
+
+function clearRateHistory() {
+
+    localStorage.removeItem(
+        "rateCheckHistory"
+    );
+
+    displayRateHistory();
+}
+
+
+// ===============================
+// CRYPTOCURRENCY
+// ===============================
+
+async function loadCryptoRate() {
+
+    if (
+        !cryptoCurrency ||
+        !cryptoName ||
+        !cryptoPrice ||
+        !cryptoChange
+    ) {
+        return;
+    }
+
+    const coin =
+        cryptoCurrency.value;
+
+
+    if (!coin) {
+        return;
+    }
+
+
+    cryptoPrice.textContent =
+        "Loading...";
+
+    cryptoChange.textContent =
+        "Checking latest price...";
+
+
+    try {
+
+        const response = await fetch(
+            `${CRYPTO_API_URL}?ids=${encodeURIComponent(coin)}&vs_currencies=usd&include_24hr_change=true`,
+            {
+                cache: "no-store"
+            }
+        );
+
+
+        if (!response.ok) {
+            throw new Error(
+                `Crypto API error: ${response.status}`
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data[coin] ||
+            typeof data[coin].usd !== "number"
+        ) {
+            throw new Error(
+                "Cryptocurrency data unavailable."
+            );
+        }
+
+
+        const price =
+            data[coin].usd;
+
+        const change =
+            data[coin].usd_24h_change;
+
+
+        const selectedOption =
+            cryptoCurrency.options[
+                cryptoCurrency.selectedIndex
+            ];
+
+
+        const name =
+            selectedOption
+                ? selectedOption.textContent
+                : coin;
+
+
+        cryptoName.textContent =
+            name;
+
+
+        cryptoPrice.textContent =
+            `$${formatNumber(price)}`;
+
+
+        if (Number.isFinite(change)) {
+
+            const sign =
+                change >= 0
+                    ? "+"
+                    : "";
+
+            cryptoChange.textContent =
+                `${sign}${formatNumber(change)}% (24h)`;
+
+        } else {
+
+            cryptoChange.textContent =
+                "24h change unavailable";
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Crypto loading error:",
+            error
+        );
+
+        cryptoName.textContent =
+            "Cryptocurrency";
+
+        cryptoPrice.textContent =
+            "Price unavailable";
+
+        cryptoChange.textContent =
+            "Unable to load latest rate.";
+    }
+                          }
