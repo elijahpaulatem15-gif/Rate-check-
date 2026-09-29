@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
     <meta charset="UTF-8">
@@ -5,390 +7,299 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Rate Check — Currency Exchange Rates & Converter</title>
+    <title>Rate Check — Currency & Crypto Converter</title>
 
     <meta name="description"
-          content="Rate Check is a free currency exchange-rate checker and converter. Compare USD with currencies worldwide, including market, local market, and black-market rates.">
+          content="Rate Check is a free currency converter and cryptocurrency rate checker. Convert currencies and check crypto prices quickly and easily.">
 
     <meta name="robots"
           content="index, follow">
 
-    <meta name="theme-color" content="#080808">
-    
     <link rel="canonical"
           href="https://elijahpaulatem15-gif.github.io/Rate-check/">
 
+    <meta property="og:title"
+          content="Rate Check — Currency & Crypto Converter">
 
-    <!-- Social Sharing -->
+    <meta property="og:description"
+          content="Convert currencies and check cryptocurrency rates with Rate Check.">
 
     <meta property="og:type"
           content="website">
 
-    <meta property="og:title"
-          content="Rate Check — Currency Exchange Rates & Converter">
-
-    <meta property="og:description"
-          content="Free currency exchange-rate checker and converter. Compare currencies and market rates.">
-
     <meta property="og:url"
           content="https://elijahpaulatem15-gif.github.io/Rate-check/">
-
 
     <meta name="twitter:card"
           content="summary">
 
     <meta name="twitter:title"
-          content="Rate Check — Currency Exchange Rates & Converter">
+          content="Rate Check — Currency & Crypto Converter">
 
     <meta name="twitter:description"
-          content="Free currency exchange-rate checker and converter.">
+          content="A free currency converter and cryptocurrency rate checker.">
 
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Rate Check",
-    "url": "https://elijahpaulatem15-gif.github.io/Rate-check/",
-    "description": "Free currency exchange-rate checker and converter.",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "Any"
-}
-</script>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="icon"
-      type="image/png"
-      href="file_000000000b20820bb7603403fb4c04a1.png">
-
-    <link rel="manifest" href="manifest.json">
-
-    <link rel="stylesheet"
-          href="style.css">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Rate Check",
-  "url": "https://elijahpaulatem15-gif.github.io/Rate-check/",
-  "description": "A free currency exchange-rate checker and converter comparing USD with currencies worldwide.",
-  "applicationCategory": "FinanceApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
-}
-    </script>
 </head>
 
-<script>
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./service-worker.js")
-                .then(() => {
-                    console.log("Rate Check service worker registered.");
-                })
-                .catch((error) => {
-                    console.error("Service worker registration failed:", error);
-                });
-        });
-    }
-    </script>
-
 <body>
-<section class="seo-intro">
-    <h1>Rate Check — Currency Exchange Rates & Converter</h1>
 
-    <p>
-        Rate Check is a free currency exchange-rate checker and converter.
-        Compare USD with currencies worldwide and check available market,
-        local market, and black-market rates.
-    </p>
-</section>
-    <header class="header">
-        <div class="logo">
-            <span class="logo-icon">💱</span>
-            <span>RATE CHECK</span>
-        </div>
+    <div class="app-container">
 
-        <p class="tagline">
-            Know the rate. Know the difference.
-        </p>
-    </header>
+        <!-- Header -->
+        <header class="app-header">
+
+            <div class="logo">
+                💱 RATE CHECK
+            </div>
+
+            <p class="tagline">
+                Know the rate. Know the difference.
+            </p>
+
+        </header>
 
 
-    <main class="container">
+        <!-- Currency Converter -->
+        <main>
 
-        <!-- Main Converter -->
-        <section class="card converter-card">
+            <section class="converter-card">
 
-            <div class="card-title">
-                <div>
-                    <h1>Currency Converter</h1>
+                <h1>Currency Converter</h1>
 
-<p>
-    Rate Check is a free currency exchange-rate checker and converter
-    comparing USD with currencies worldwide, including locally sourced
-    market and black-market rates.
-</p>
-        
+                <p class="subtitle">
+                    Convert currencies using current market rates.
+                </p>
+
+
+                <!-- Amount -->
+                <div class="input-group">
+
+                    <label for="amount">
+                        Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        value="1"
+                        min="0"
+                        step="any"
+                        placeholder="Enter amount"
+                    >
+
                 </div>
-            </div>
 
 
-            <div class="amount-box">
-                <label for="amount">Amount</label>
+                <!-- From Currency -->
+                <div class="currency-row">
 
-                <input
-                    type="number"
-                    id="amount"
-                    value="1"
-                    min="0"
-                    step="any"
+                    <div class="currency-box">
+
+                        <label for="fromCurrency">
+                            From
+                        </label>
+
+                        <select id="fromCurrency">
+                        </select>
+
+                    </div>
+
+
+                    <!-- Swap -->
+                    <button
+                        id="swapButton"
+                        class="swap-button"
+                        type="button"
+                        aria-label="Swap currencies"
+                    >
+                        ⇄
+                    </button>
+
+
+                    <!-- To Currency -->
+                    <div class="currency-box">
+
+                        <label for="toCurrency">
+                            To
+                        </label>
+
+                        <select id="toCurrency">
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Convert Button -->
+                <button
+                    id="convertButton"
+                    class="convert-button"
+                    type="button"
                 >
-            </div>
+                    Convert
+                </button>
 
 
-<!-- Currency Search -->
-<div class="currency-search-row">
+                <!-- Result -->
+                <div class="result-card">
 
-    <input
-        type="text"
-        id="fromCurrencySearch"
-        placeholder="🔎 Search From currency..."
-        autocomplete="off"
-    >
+                    <div
+                        id="resultValue"
+                        class="result-value"
+                    >
+                        —
+                    </div>
 
-    <input
-        type="text"
-        id="toCurrencySearch"
-        placeholder="🔎 Search To currency..."
-        autocomplete="off"
-    >
+                    <div
+                        id="rateText"
+                        class="rate-text"
+                    >
+                        Enter an amount to check the rate.
+                    </div>
 
-</div>           
+                </div>
 
-            <div class="currency-row">
+            </section>
 
-                <div class="currency-box">
-                    <label for="fromCurrency">From</label>
 
-                    <select id="fromCurrency">
-                        <option value="USD">🇺🇸 USD — US Dollar</option>
+            <!-- Cryptocurrency -->
+            <section class="crypto-card">
+
+                <h2>Cryptocurrency Rates</h2>
+
+                <p class="subtitle">
+                    Check current cryptocurrency prices.
+                </p>
+
+
+                <div class="crypto-selector">
+
+                    <label for="cryptoCurrency">
+                        Cryptocurrency
+                    </label>
+
+                    <select id="cryptoCurrency">
+
+                        <option value="bitcoin">
+                            Bitcoin (BTC)
+                        </option>
+
+                        <option value="ethereum">
+                            Ethereum (ETH)
+                        </option>
+
+                        <option value="tether">
+                            Tether (USDT)
+                        </option>
+
+                        <option value="binancecoin">
+                            BNB
+                        </option>
+
+                        <option value="solana">
+                            Solana (SOL)
+                        </option>
+
+                        <option value="usd-coin">
+                            USD Coin (USDC)
+                        </option>
+
+                        <option value="xrp">
+                            XRP
+                        </option>
+
+                        <option value="dogecoin">
+                            Dogecoin (DOGE)
+                        </option>
+
                     </select>
+
+                </div>
+
+
+                <div class="crypto-result">
+
+                    <div
+                        id="cryptoName"
+                        class="crypto-name"
+                    >
+                        Bitcoin
+                    </div>
+
+                    <div
+                        id="cryptoPrice"
+                        class="crypto-price"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        id="cryptoChange"
+                        class="crypto-change"
+                    >
+                        —
+                    </div>
+
                 </div>
 
 
                 <button
-                    class="swap-button"
-                    id="swapButton"
-                    title="Swap currencies"
+                    id="cryptoRefreshButton"
+                    class="convert-button"
+                    type="button"
                 >
-                    ⇄
+                    Check Crypto Rate
                 </button>
-
-
-                <div class="currency-box">
-                    <label for="toCurrency">To</label>
-
-                    <select id="toCurrency">
-                        <option value="SSP">🇸🇸 SSP — South Sudanese Pound</option>
-                    </select>
-                </div>
-
-            </div>
-
-
-            <button class="convert-button" id="convertButton">
-                Check Rate
-            </button>
-
-
-            <div class="result-box" id="resultBox">
-
-                <p class="result-label">
-                    Current Market Rate
-                </p>
-
-                <div class="result-value" id="resultValue">
-                    Loading...
-                </div>
-
-                <p class="rate-text" id="rateText">
-                    Getting the latest rate...
-                </p>
-
-            </div>
-
-        </section>
-
-<!-- South Sudan -->
-<section class="card south-sudan-card">
-
-    <div class="country-heading">
-        <span class="flag" id="countryFlag">🇸🇸</span>
-
-<div>
-    <h2 id="countryRateTitle">South Sudan Rate</h2>
-    <p id="countryRatePair">USD → South Sudanese Pound</p>
-</div>
-
-</div>
-
-<div class="rate-grid">
-
-        <div class="rate-item">
-            <span>Reference Rate</span>
-            <strong id="sspMarketRate">—</strong>
-        </div>
-
-        <div class="rate-item">
-            <span>Local Market Rate</span>
-            <strong id="sspLocalRate">—</strong>
-        </div>
-
-        <div class="rate-item">
-            <span>Black Market</span>
-            <strong id="sspBlackRate">—</strong>
-        </div>
-
-    </div>
-
-
-    <div class="black-market-input">
-
-        <label for="localMarketRate">
-            Enter local market rate
-        </label>
-
-        <div class="input-row">
-
-            <input
-                type="number"
-                id="localMarketRate"
-                placeholder="Example: 74000"
-                min="0"
-                step="any"
-            >
-
-            <button id="saveLocalRate">
-                Save
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div class="black-market-input">
-
-        <label for="blackMarketRate">
-            Enter local black-market rate
-        </label>
-
-        <div class="input-row">
-
-            <input
-                type="number"
-                id="blackMarketRate"
-                placeholder="Example: 76000"
-                min="0"
-                step="any"
-            >
-
-            <button id="saveBlackRate">
-                Save
-            </button>
-
-        </div>
-
-        <small>
-            Local and black-market figures are manually entered and
-            should always be checked against a trusted local source.
-        </small>
-
-    </div>
-
-
-    <div class="difference-box">
-
-        <span>Local → Black Market Difference</span>
-
-        <strong id="rateDifference">
-            —
-        </strong>
-
-    </div>
 
             </section>
 
-        <!-- Rate History -->
-<section class="card history-card">
 
-    <div class="country-heading">
-        <span class="flag">📊</span>
+            <!-- Rate History -->
+            <section class="history-card">
 
-        <div>
-            <h2>Rate History</h2>
-            <p>Your recent currency checks</p>
-        </div>
-    </div>
+                <h2>Rate History</h2>
 
-    <div id="rateHistory" class="rate-history">
+                <p class="subtitle">
+                    Your recent currency checks
+                </p>
 
-        <p class="history-empty">
-            No rate history yet.
-        </p>
+                <div id="rateHistory">
+                    No rate history yet.
+                </div>
 
-    </div>
+                <button
+                    id="clearHistory"
+                    class="clear-history-button"
+                    type="button"
+                >
+                    Clear History
+                </button>
 
-    <button
-        id="clearHistory"
-        class="clear-history-button"
-    >
-        Clear History
-    </button>
+            </section>
 
-                    </section>
+        </main>
 
-        <!-- Information -->
-        <section class="info-section">
 
-            <h2>About Rate Check</h2>
+        <!-- Footer -->
+        <footer>
 
             <p>
-                Rate Check helps you compare the United States Dollar
-                with currencies around the world. Market rates come from
-                an exchange-rate data source, while local street rates
-                can be entered separately for comparison.
+                © 2026 Rate Check
             </p>
 
-            <p class="disclaimer">
-                Rates can change frequently. Always verify important
-                transactions with your bank, exchange provider, or
-                trusted local source.
+            <p>
+                Currency & Cryptocurrency Rates
             </p>
 
-        </section>
+        </footer>
 
-    </main>
-
-
-
-    <footer>
-
-        <p>
-            © 2026 Rate Check
-        </p>
-
-        <p>
-            Built to make exchange rates easier to understand.
-        </p>
-
-    </footer>
+    </div>
 
 
     <script src="app.js"></script>
 
 </body>
-              </html>
+        </html>
