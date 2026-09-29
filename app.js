@@ -176,7 +176,12 @@ async function loadCurrencies() {
             "Currency loading failed:",
             error
         );
-
+        
+        alert(
+    "Currency loading error: " +
+    error.message
+);
+        
         fromCurrency.innerHTML =
             '<option value="">Currency loading failed</option>';
 
