@@ -43,41 +43,36 @@ const cryptoRefreshButton =
 // --------------------------------------------------
 
 async function loadCurrencies() {
-
     try {
-
-        const response =
-            await fetch(`${API_URL}/currencies`);
+        const response = await fetch(`${API_URL}/currencies`);
 
         if (!response.ok) {
             throw new Error("Unable to load currencies");
         }
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
-        currencies = Object.fromEntries(
-            data.map(currency => [
-                currency.iso_code,
-                currency.name
-            ])
-        );
+        currencies = {};
+
+        data.forEach(currency => {
+            const code = currency.iso_code;
+            const name = currency.name;
+
+            if (code && name) {
+                currencies[code] = name;
+            }
+        });
 
         populateCurrencies();
-
         convertCurrency();
 
     } catch (error) {
+        console.error("Currency loading error:", error);
 
-        console.error(error);
-
-        resultValue.textContent =
-            "Unable to load";
-
-        rateText.textContent =
-            "Please check your internet connection.";
+        fromCurrency.innerHTML = '<option value="">Currencies unavailable</option>';
+        toCurrency.innerHTML = '<option value="">Currencies unavailable</option>';
     }
-}
+            }
 
 
 // --------------------------------------------------
