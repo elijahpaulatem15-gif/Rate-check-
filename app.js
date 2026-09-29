@@ -113,33 +113,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadCurrencies() {
 
-    if (!fromCurrency || !toCurrency) {
-        console.error(
-            "Currency selectors were not found."
-        );
-        return;
-    }
-
     try {
 
         const response = await fetch(
-            `${API_URL}/currencies`,
-            {
-                cache: "no-store"
-            }
+            "https://api.frankfurter.dev/v2/currencies"
         );
 
         if (!response.ok) {
             throw new Error(
-                `Currency API error: ${response.status}`
+                "Currency API request failed"
             );
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
+
+        console.log(
+            "Currency API response:",
+            data
+        );
 
         if (!Array.isArray(data)) {
             throw new Error(
-                "Currency API returned invalid data."
+                "Currency data is not an array"
             );
         }
 
@@ -148,7 +144,6 @@ async function loadCurrencies() {
         data.forEach(currency => {
 
             if (
-                currency &&
                 currency.iso_code &&
                 currency.name
             ) {
@@ -161,46 +156,40 @@ async function loadCurrencies() {
 
         });
 
-        if (
-            Object.keys(currencies).length === 0
-        ) {
-            throw new Error(
-                "No currencies were loaded."
-            );
-        }
+        console.log(
+            "Currencies loaded:",
+            currencies
+        );
 
         populateCurrencies();
 
-        console.log(
-            "Currencies loaded:",
-            Object.keys(currencies).length
-        );
-
-        await convertCurrency();
+        if (
+            fromCurrency.value &&
+            toCurrency.value
+        ) {
+            await convertCurrency();
+        }
 
     } catch (error) {
 
         console.error(
-            "Currency loading error:",
+            "Currency loading failed:",
             error
         );
 
         fromCurrency.innerHTML =
-            '<option value="">Unable to load currencies</option>';
+            '<option value="">Currency loading failed</option>';
 
         toCurrency.innerHTML =
-            '<option value="">Unable to load currencies</option>';
+            '<option value="">Currency loading failed</option>';
 
-        if (resultValue) {
-            resultValue.textContent = "—";
-        }
+        resultValue.textContent =
+            "—";
 
-        if (rateText) {
-            rateText.textContent =
-                "Currency data could not be loaded.";
-        }
+        rateText.textContent =
+            "Unable to load currency data.";
     }
-}
+        }
 
 
 // ===============================
