@@ -39,6 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
 fromCurrencySearch = document.getElementById("fromCurrencySearch");
 toCurrencySearch = document.getElementById("toCurrencySearch");
 
+if (fromCurrencySearch) {
+    fromCurrencySearch.addEventListener("input", populateCurrencies);
+}
+
+if (toCurrencySearch) {
+    toCurrencySearch.addEventListener("input", populateCurrencies);
+}
+
     convertButton = document.getElementById("convertButton");
     swapButton = document.getElementById("swapButton");
 
@@ -210,110 +218,62 @@ async function loadCurrencies() {
 // ===============================
 
 function populateCurrencies() {
-
     if (!fromCurrency || !toCurrency) {
         return;
     }
 
-    fromCurrency.innerHTML = "";
-    toCurrency.innerHTML = "";
+    const currencyList = Object.entries(currencies)
+        .sort((a, b) => a[0].localeCompare(b[0]));
 
-    const currencyList =
-        Object.entries(currencies)
-            .sort((a, b) =>
-                a[0].localeCompare(b[0])
-            );
+    const fromSearch = (
+        fromCurrencySearch?.value || ""
+    ).trim().toLowerCase();
 
-    currencyList.forEach(
-        ([code, name]) => {
+    const toSearch = (
+        toCurrencySearch?.value || ""
+    ).trim().toLowerCase();
 
-            const optionFrom =
-                document.createElement("option");
+    const selectedFrom =
+        fromCurrency.value ||
+        localStorage.getItem("rateCheckFromCurrency") ||
+        "USD";
 
-            optionFrom.value = code;
-            optionFrom.textContent =
-                `${code} — ${name}`;
+    const selectedTo =
+        toCurrency.value ||
+        localStorage.getItem("rateCheckToCurrency") ||
+        "EUR";
 
-            const optionTo =
-                document.createElement("option");
-
-            optionTo.value = code;
-            optionTo.textContent =
-                `${code} — ${name}`;
-
-            fromCurrency.appendChild(
-                optionFrom
-            );
-
-            toCurrency.appendChild(
-                optionTo
-            );
-        }
+    const fromList = currencyList.filter(
+        ([code, name]) =>
+            code.toLowerCase().includes(fromSearch) ||
+            name.toLowerCase().includes(fromSearch)
     );
 
+    const toList = currencyList.filter(
+        ([code, name]) =>
+            code.toLowerCase().includes(toSearch) ||
+            name.toLowerCase().includes(toSearch)
+    );
 
-    // Restore saved currencies
-    const savedFrom =
-        localStorage.getItem(
-            "rateCheckFromCurrency"
-        );
+    function fillDropdown(select, list, preferred) {
+        select.innerHTML = "";
 
-    const savedTo =
-        localStorage.getItem(
-            "rateCheckToCurrency"
-        );
+        list.forEach(([code, name]) => {
+            const option = document.createElement("option");
+            option.value = code;
+            option.textContent = `${code} — ${name}`;
+            select.appendChild(option);
+        });
 
-
-    // From currency
-    if (
-        savedFrom &&
-        currencies[savedFrom]
-    ) {
-
-        fromCurrency.value =
-            savedFrom;
-
-    } else if (currencies.USD) {
-
-        fromCurrency.value =
-            "USD";
-
-    } else if (currencyList.length > 0) {
-
-        fromCurrency.value =
-            currencyList[0][0];
+        if (list.some(([code]) => code === preferred)) {
+            select.value = preferred;
+        } else if (list.length > 0) {
+            select.value = list[0][0];
+        }
     }
 
-
-    // To currency
-    if (
-        savedTo &&
-        currencies[savedTo]
-    ) {
-
-        toCurrency.value =
-            savedTo;
-
-    } else if (currencies.EUR) {
-
-        toCurrency.value =
-            "EUR";
-
-    } else if (currencies.GBP) {
-
-        toCurrency.value =
-            "GBP";
-
-    } else if (currencyList.length > 1) {
-
-        toCurrency.value =
-            currencyList[1][0];
-
-    } else if (currencyList.length > 0) {
-
-        toCurrency.value =
-            currencyList[0][0];
-    }
+    fillDropdown(fromCurrency, fromList, selectedFrom);
+    fillDropdown(toCurrency, toList, selectedTo);
 }
 
 
