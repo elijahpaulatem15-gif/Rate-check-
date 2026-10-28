@@ -5,6 +5,9 @@ const CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
 
 let currencies = {};
 
+let fromCurrencySearch;
+let toCurrencySearch;
+
 let amountInput;
 let fromCurrency;
 let toCurrency;
@@ -32,6 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
     amountInput = document.getElementById("amount");
     fromCurrency = document.getElementById("fromCurrency");
     toCurrency = document.getElementById("toCurrency");
+
+fromCurrencySearch = document.getElementById("fromCurrencySearch");
+toCurrencySearch = document.getElementById("toCurrencySearch");
 
     convertButton = document.getElementById("convertButton");
     swapButton = document.getElementById("swapButton");
