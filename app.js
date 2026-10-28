@@ -63,6 +63,24 @@ if (toCurrencySearch) {
     rateHistory = document.getElementById("rateHistory");
     clearHistory = document.getElementById("clearHistory");
 
+if (fromCurrency) {
+    fromCurrency.addEventListener("change", () => {
+        localStorage.setItem(
+            "rateCheckFromCurrency",
+            fromCurrency.value
+        );
+    });
+}
+
+if (toCurrency) {
+    toCurrency.addEventListener("change", () => {
+        localStorage.setItem(
+            "rateCheckToCurrency",
+            toCurrency.value
+        );
+    });
+}
+
 
     // Currency buttons
     if (convertButton) {
