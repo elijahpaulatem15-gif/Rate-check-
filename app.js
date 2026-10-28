@@ -1,4 +1,4 @@
-alert("NEW APP.JS IS LOADING");
+
 
 const API_URL = "https://api.frankfurter.dev/v2";
 const CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
