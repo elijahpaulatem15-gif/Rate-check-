@@ -455,3 +455,12 @@ footer {
 .crypto-result .crypto-name {
     display: none !important;
 }
+
+.crypto-result {
+    margin-top: 18px;
+    background: #0b1218;
+    border: 1px solid #285641;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+}
