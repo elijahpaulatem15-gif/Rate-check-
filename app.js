@@ -464,29 +464,42 @@ async function convertCurrency() {
 // ===============================
 
 function swapCurrencies() {
-
-    if (
-        !fromCurrency ||
-        !toCurrency
-    ) {
+    if (!fromCurrency || !toCurrency) {
         return;
     }
 
-    const currentFrom =
-        fromCurrency.value;
+    const currentFrom = fromCurrency.value;
+    const currentTo = toCurrency.value;
 
-    const currentTo =
-        toCurrency.value;
+    if (!currentFrom || !currentTo) {
+        return;
+    }
 
-    fromCurrency.value =
-        currentTo;
+    if (fromCurrencySearch) {
+        fromCurrencySearch.value = "";
+    }
 
-    toCurrency.value =
-        currentFrom;
+    if (toCurrencySearch) {
+        toCurrencySearch.value = "";
+    }
+
+    populateCurrencies();
+
+    fromCurrency.value = currentTo;
+    toCurrency.value = currentFrom;
+
+    localStorage.setItem(
+        "rateCheckFromCurrency",
+        currentTo
+    );
+
+    localStorage.setItem(
+        "rateCheckToCurrency",
+        currentFrom
+    );
 
     convertCurrency();
 }
-
 
 // ===============================
 // FORMAT NUMBERS
