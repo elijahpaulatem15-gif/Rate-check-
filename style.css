@@ -248,38 +248,40 @@ select:focus {
 
 .crypto-info {
     margin-top: 18px;
-    background: #080808;
-    border: 1px solid #252525;
-    border-radius: 14px;
-    padding: 18px;
+    background: #0b1218;
+    border: 1px solid #285641;
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
 }
 
 .crypto-info h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 21px;
+    margin-bottom: 12px;
+    color: #55d6a0;
 }
 
 .crypto-price {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
+    color: #55d6a0;
     margin-bottom: 8px;
     overflow-wrap: break-word;
 }
 
 .crypto-change {
-    color: #999;
-    font-size: 13px;
+    color: #aab4ae;
+    font-size: 14px;
 }
 
 .crypto-refresh-button {
     width: 100%;
-    height: 48px;
+    height: 50px;
     margin-top: 15px;
-    border: 1px solid #333;
-    border-radius: 10px;
-    background: #1c1c1c;
-    color: #ffffff;
+    border: 1px solid #285641;
+    border-radius: 12px;
+    background: #142b21;
+    color: #55d6a0;
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
@@ -287,7 +289,7 @@ select:focus {
 }
 
 .crypto-refresh-button:hover {
-    background: #292929;
+    background: #1d3d2e;
 }
 
 /* ==============================
