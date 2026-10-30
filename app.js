@@ -111,18 +111,30 @@ if (toCurrency) {
 
     // Crypto
     if (cryptoCurrency) {
-        cryptoCurrency.addEventListener(
-            "change",
-            loadCryptoRate
-        );
+    const savedCrypto =
+        localStorage.getItem("rateCheckCrypto");
+
+    if (
+        savedCrypto &&
+        [...cryptoCurrency.options].some(
+            option => option.value === savedCrypto
+        )
+    ) {
+        cryptoCurrency.value = savedCrypto;
     }
 
-    if (cryptoRefreshButton) {
-        cryptoRefreshButton.addEventListener(
-            "click",
-            loadCryptoRate
-        );
-    }
+    cryptoCurrency.addEventListener(
+        "change",
+        () => {
+            localStorage.setItem(
+                "rateCheckCrypto",
+                cryptoCurrency.value
+            );
+
+            loadCryptoRate();
+        }
+    );
+}
 
 
     // History
