@@ -464,3 +464,19 @@ footer {
     padding: 20px;
     text-align: center;
 }
+
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 22px;
+        letter-spacing: 1px;
+    }
+
+    .crypto-price {
+        font-size: 25px;
+    }
+
+    .currency-box input[type="search"] {
+        font-size: 12px;
+    }
+}
