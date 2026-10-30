@@ -152,6 +152,21 @@ if (toCurrency) {
     loadCryptoRate();
 });
 
+const savedAmount =
+    localStorage.getItem("rateCheckAmount");
+
+if (savedAmount !== null && amountInput) {
+    amountInput.value = savedAmount;
+}
+
+if (amountInput) {
+    amountInput.addEventListener("input", () => {
+        localStorage.setItem(
+            "rateCheckAmount",
+            amountInput.value
+        );
+    });
+}
 
 // ===============================
 // LOAD CURRENCIES
