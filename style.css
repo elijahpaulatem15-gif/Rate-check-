@@ -170,22 +170,22 @@ select:focus {
 /* ==============================
    SWAP BUTTON
 ============================== */
-
 .swap-button {
     flex: 0 0 48px;
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    border: 1px solid #333;
-    background: #1c1c1c;
-    color: #ffffff;
+    border: 1px solid #285641;
+    background: #142b21;
+    color: #55d6a0;
     font-size: 25px;
     cursor: pointer;
     transition: 0.2s;
 }
 
 .swap-button:hover {
-    background: #292929;
+    background: #1d3d2e;
+    transform: rotate(180deg);
 }
 
 /* ==============================
@@ -194,52 +194,43 @@ select:focus {
 
 .convert-button {
     width: 100%;
-    height: 52px;
+    height: 54px;
     margin-top: 20px;
     border: none;
-    border-radius: 11px;
-    background: #ffffff;
-    color: #000000;
-    font-size: 16px;
+    border-radius: 13px;
+    background: #55d6a0;
+    color: #07130e;
+    font-size: 17px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
 }
 
 .convert-button:hover {
-    background: #dddddd;
+    background: #3fc58d;
+    transform: translateY(-2px);
 }
 
 /* ==============================
    RESULT
 ============================== */
 
-.result-box {
+.result-card {
     width: 100%;
-    background: #080808;
-    border: 1px solid #252525;
-    border-radius: 14px;
+    background: #101f19;
+    border: 1px solid #285641;
+    border-radius: 16px;
     padding: 20px;
     margin-top: 20px;
     text-align: center;
 }
 
-.result-label {
-    color: #999;
-    font-size: 13px;
-}
-
 .result-value {
     width: 100%;
-    font-size: 30px;
+    font-size: 32px;
     font-weight: bold;
+    color: #55d6a0;
     margin: 10px 0;
-    overflow-wrap: break-word;
-}
-
-.rate-text {
-    color: #888;
-    font-size: 13px;
     overflow-wrap: break-word;
 }
 
