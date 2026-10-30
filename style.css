@@ -452,6 +452,6 @@ footer {
     }
     }
 
-.crypto-name {
-    display: none;
+.crypto-result .crypto-name {
+    display: none !important;
 }
