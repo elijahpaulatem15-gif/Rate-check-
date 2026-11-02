@@ -36,6 +36,20 @@ document.addEventListener("DOMContentLoaded", () => {
     fromCurrency = document.getElementById("fromCurrency");
     toCurrency = document.getElementById("toCurrency");
 
+const savedAmount =
+    localStorage.getItem("rateCheckAmount");
+
+if (savedAmount !== null) {
+    amountInput.value = savedAmount;
+}
+
+amountInput.addEventListener("input", () => {
+    localStorage.setItem(
+        "rateCheckAmount",
+        amountInput.value
+    );
+});
+
 fromCurrencySearch = document.getElementById("fromCurrencySearch");
 toCurrencySearch = document.getElementById("toCurrencySearch");
 
@@ -152,21 +166,6 @@ if (toCurrency) {
     loadCryptoRate();
 });
 
-const savedAmount =
-    localStorage.getItem("rateCheckAmount");
-
-if (savedAmount !== null && amountInput) {
-    amountInput.value = savedAmount;
-}
-
-if (amountInput) {
-    amountInput.addEventListener("input", () => {
-        localStorage.setItem(
-            "rateCheckAmount",
-            amountInput.value
-        );
-    });
-}
 
 // ===============================
 // LOAD CURRENCIES
