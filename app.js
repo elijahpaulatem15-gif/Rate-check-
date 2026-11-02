@@ -793,3 +793,19 @@ async function loadCryptoRate() {
             "Unable to load latest rate.";
     }
                           }
+
+// Crypto event listeners
+
+if (cryptoCurrency) {
+    cryptoCurrency.addEventListener(
+        "change",
+        loadCryptoRate
+    );
+}
+
+if (cryptoRefreshButton) {
+    cryptoRefreshButton.addEventListener(
+        "click",
+        loadCryptoRate
+    );
+}
