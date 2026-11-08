@@ -230,31 +230,28 @@ async function loadCurrencies() {
             await convertCurrency();
         }
 
+    
     } catch (error) {
 
         console.error(
             "Currency loading failed:",
             error
         );
-        
-        alert(
-    "Currency loading error: " +
-    error.message
-);
-        
+
         fromCurrency.innerHTML =
-            '<option value="">Currency loading failed</option>';
+            '<option value="">Currency unavailable</option>';
 
         toCurrency.innerHTML =
-            '<option value="">Currency loading failed</option>';
+            '<option value="">Currency unavailable</option>';
 
         resultValue.textContent =
             "—";
 
         rateText.textContent =
-            "Unable to load currency data.";
+            "Unable to connect to the currency service. Check your internet connection and try again.";
     }
-        }
+}
+
 
 
 // ===============================
