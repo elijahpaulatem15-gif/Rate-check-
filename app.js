@@ -793,12 +793,6 @@ async function loadCryptoRate() {
 
 // Crypto event listeners
 
-if (cryptoCurrency) {
-    cryptoCurrency.addEventListener(
-        "change",
-        loadCryptoRate
-    );
-}
 
 if (cryptoRefreshButton) {
     cryptoRefreshButton.addEventListener(
