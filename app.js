@@ -798,6 +798,4 @@ async function loadCryptoRate() {
     }
                           }
 
-// Crypto event listeners
-
 
