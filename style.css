@@ -480,3 +480,83 @@ footer {
         font-size: 12px;
     }
 }
+
+
+/* ==============================
+   RATE CHECK - DESIGN POLISH
+============================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    line-height: 1.5;
+}
+
+.card,
+.crypto-card,
+.history-card {
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.25),
+        0 0 12px rgba(85, 214, 160, 0.025);
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+.card:hover,
+.crypto-card:hover,
+.history-card:hover {
+    border-color: #326b50;
+}
+
+input,
+select {
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.convert-button,
+.crypto-refresh-button,
+.swap-button,
+#clearHistory {
+    transition: all 0.2s ease;
+}
+
+.convert-button:active,
+.crypto-refresh-button:active,
+.swap-button:active,
+#clearHistory:active {
+    transform: scale(0.98);
+}
+
+.result-card,
+.crypto-info,
+.crypto-result {
+    box-shadow: inset 0 0 20px rgba(85, 214, 160, 0.025);
+}
+
+footer {
+    color: #84918b;
+}
+
+@media (max-width: 520px) {
+    .container {
+        padding-bottom: 35px;
+    }
+
+    .card-title h1 {
+        font-size: 21px;
+    }
+
+    .result-card,
+    .crypto-info,
+    .crypto-result {
+        padding: 17px;
+    }
+}
