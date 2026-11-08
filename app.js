@@ -150,6 +150,13 @@ if (toCurrency) {
     );
 }
 
+if (cryptoRefreshButton) {
+    cryptoRefreshButton.addEventListener(
+        "click",
+        loadCryptoRate
+    );
+}
+
 
     // History
     if (clearHistory) {
@@ -794,9 +801,3 @@ async function loadCryptoRate() {
 // Crypto event listeners
 
 
-if (cryptoRefreshButton) {
-    cryptoRefreshButton.addEventListener(
-        "click",
-        loadCryptoRate
-    );
-}
