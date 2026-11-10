@@ -799,9 +799,10 @@ async function loadCryptoRate() {
 
         cryptoChange.textContent =
             "Unable to load latest rate.";
+
+        cryptoChange.textContent +=
+            ` Error: ${error.message}`;
     }
-                          }
+}
 
-
-cryptoChange.textContent +=
-    ` Error: ${error.message}`;
+   
