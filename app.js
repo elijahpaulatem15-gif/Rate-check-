@@ -36,19 +36,23 @@ document.addEventListener("DOMContentLoaded", () => {
     fromCurrency = document.getElementById("fromCurrency");
     toCurrency = document.getElementById("toCurrency");
 
-const savedAmount =
-    localStorage.getItem("rateCheckAmount");
+if (amountInput) {
 
-if (savedAmount !== null) {
-    amountInput.value = savedAmount;
+    const savedAmount =
+        localStorage.getItem("rateCheckAmount");
+
+    if (savedAmount !== null) {
+        amountInput.value = savedAmount;
+    }
+
+    amountInput.addEventListener("input", () => {
+        localStorage.setItem(
+            "rateCheckAmount",
+            amountInput.value
+        );
+    });
+
 }
-
-amountInput.addEventListener("input", () => {
-    localStorage.setItem(
-        "rateCheckAmount",
-        amountInput.value
-    );
-});
 
 fromCurrencySearch = document.getElementById("fromCurrencySearch");
 toCurrencySearch = document.getElementById("toCurrencySearch");
