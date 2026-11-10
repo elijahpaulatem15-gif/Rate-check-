@@ -803,3 +803,5 @@ async function loadCryptoRate() {
                           }
 
 
+cryptoChange.textContent +=
+    ` Error: ${error.message}`;
