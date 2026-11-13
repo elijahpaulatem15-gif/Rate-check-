@@ -769,6 +769,7 @@ async function loadCryptoRate() {
         return;
     }
 
+const requestId = ++cryptoRequestId;
 
     cryptoPrice.textContent =
         "Loading...";
@@ -780,6 +781,13 @@ async function loadCryptoRate() {
     try {
 
         const data = await fetchCryptoRates();
+
+if (
+    requestId !== cryptoRequestId ||
+    coin !== cryptoCurrency.value
+) {
+    return;
+}
 
 
         if (
@@ -837,8 +845,11 @@ async function loadCryptoRate() {
 
 
     } catch (error) {
-
-        console.error(
+if (requestId !== cryptoRequestId) {
+    return;
+}
+       
+ console.error(
             "Crypto loading error:",
             error
         );
