@@ -25,6 +25,7 @@ let cryptoRefreshButton;
 let cryptoRates = {};
 let cryptoRatesUpdatedAt = 0;
 let cryptoRatesPromise = null;
+let cryptoRequestId = 0;
 
 let rateHistory;
 let clearHistory;
