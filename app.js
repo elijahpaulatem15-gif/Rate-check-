@@ -22,6 +22,10 @@ let cryptoPrice;
 let cryptoChange;
 let cryptoRefreshButton;
 
+let cryptoRates = {};
+let cryptoRatesUpdatedAt = 0;
+let cryptoRatesPromise = null;
+
 let rateHistory;
 let clearHistory;
 
