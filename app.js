@@ -686,6 +686,69 @@ function clearRateHistory() {
 // CRYPTOCURRENCY
 // ===============================
 
+async function fetchCryptoRates() {
+
+    // Use cached prices for 60 seconds
+    const now = Date.now();
+
+    if (
+        Object.keys(cryptoRates).length > 0 &&
+        now - cryptoRatesUpdatedAt < 60000
+    ) {
+        return cryptoRates;
+    }
+
+    // Prevent duplicate simultaneous requests
+    if (cryptoRatesPromise) {
+        return cryptoRatesPromise;
+    }
+
+    cryptoRatesPromise = (async () => {
+
+        try {
+
+            const coins = [
+                "bitcoin",
+                "ethereum",
+                "tether",
+                "binancecoin",
+                "solana",
+                "usd-coin",
+                "ripple",
+                "dogecoin"
+            ];
+
+            const response = await fetch(
+                `${CRYPTO_API_URL}?ids=${coins.join(",")}&vs_currencies=usd&include_24hr_change=true`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Crypto API error: ${response.status}`
+                );
+            }
+
+            const data = await response.json();
+
+            cryptoRates = data;
+            cryptoRatesUpdatedAt = Date.now();
+
+            return cryptoRates;
+
+        } finally {
+
+            cryptoRatesPromise = null;
+
+        }
+
+    })();
+
+    return cryptoRatesPromise;
+}
+
 async function loadCryptoRate() {
 
     if (
