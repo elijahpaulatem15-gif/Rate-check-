@@ -778,23 +778,7 @@ async function loadCryptoRate() {
 
     try {
 
-        const response = await fetch(
-            `${CRYPTO_API_URL}?ids=${encodeURIComponent(coin)}&vs_currencies=usd&include_24hr_change=true`,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-        if (!response.ok) {
-            throw new Error(
-                `Crypto API error: ${response.status}`
-            );
-        }
-
-
-        const data =
-            await response.json();
+        const data = await fetchCryptoRates();
 
 
         if (
