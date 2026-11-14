@@ -494,6 +494,10 @@ async function convertCurrency() {
         return;
     }
 
+    // Invalidate any older conversion request
+    const requestId =
+        ++conversionRequestId;
+
     const amount =
         parseFloat(amountInput.value);
 
@@ -531,12 +535,6 @@ async function convertCurrency() {
 
         return;
     }
-
-
-    // Track the latest conversion
-
-    const requestId =
-        ++conversionRequestId;
 
 
     // Save selections
@@ -608,6 +606,7 @@ async function convertCurrency() {
     }
 
 }
+
 
 
 // ===============================
