@@ -368,9 +368,11 @@ async function getRate(from, to) {
         await response.json();
 
     if (
-        !data ||
-        typeof data.rate !== "number"
-    ) {
+    !data ||
+    typeof data.rate !== "number" ||
+    !Number.isFinite(data.rate) ||
+    data.rate <= 0
+) {
         throw new Error(
             "Invalid exchange rate."
         );
