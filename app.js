@@ -791,16 +791,13 @@ if (
     return;
 }
 
-
-        if (
-            !data[coin] ||
-            typeof data[coin].usd !== "number"
-        ) {
-            throw new Error(
-                "Cryptocurrency data unavailable."
-            );
-        }
-
+         if (
+    !data[coin] ||
+    typeof data[coin].usd !== "number" ||
+    !Number.isFinite(data[coin].usd) ||
+    data[coin].usd <= 0
+) {
+        
 
         const price =
             data[coin].usd;
@@ -865,9 +862,5 @@ if (requestId !== cryptoRequestId) {
         cryptoChange.textContent =
             "Unable to load latest rate.";
 
-        cryptoChange.textContent +=
-            ` Error: ${error.message}`;
-    }
-}
-
+        
    
