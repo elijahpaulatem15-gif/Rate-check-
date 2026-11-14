@@ -4,6 +4,8 @@ const CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
 
 let currencies = {};
 
+let conversionRequestId = 0;
+
 let fromCurrencySearch;
 let toCurrencySearch;
 
@@ -479,6 +481,7 @@ async function getRate(from, to) {
 // CONVERT CURRENCY
 // ===============================
 
+
 async function convertCurrency() {
 
     if (
@@ -501,6 +504,8 @@ async function convertCurrency() {
         toCurrency.value;
 
 
+    // Validate amount
+
     if (
         !Number.isFinite(amount) ||
         amount < 0
@@ -515,6 +520,8 @@ async function convertCurrency() {
     }
 
 
+    // Validate currencies
+
     if (!from || !to) {
 
         resultValue.textContent =
@@ -524,6 +531,12 @@ async function convertCurrency() {
 
         return;
     }
+
+
+    // Track the latest conversion
+
+    const requestId =
+        ++conversionRequestId;
 
 
     // Save selections
@@ -550,9 +563,12 @@ async function convertCurrency() {
 
         const rate = await getRate(from, to);
 
+        if (requestId !== conversionRequestId) {
+            return;
+        }
+
         const converted =
             amount * rate;
-
 
         resultValue.textContent =
             `${formatNumber(converted)} ${to}`;
@@ -573,6 +589,10 @@ async function convertCurrency() {
 
 
     } catch (error) {
+
+        if (requestId !== conversionRequestId) {
+            return;
+        }
 
         console.error(
             "Conversion error:",
