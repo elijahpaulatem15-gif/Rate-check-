@@ -241,6 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // LOAD CURRENCIES
 // ===============================
 
+
 async function loadCurrencies() {
 
     try {
@@ -263,21 +264,34 @@ async function loadCurrencies() {
             );
         }
 
-        currencies = {};
+        const newCurrencies = {};
 
         data.forEach(currency => {
 
             if (
-                currency.iso_code &&
-                currency.name
+                currency &&
+                typeof currency.iso_code === "string" &&
+                typeof currency.name === "string" &&
+                currency.iso_code.trim() &&
+                currency.name.trim()
             ) {
 
-                currencies[currency.iso_code] =
+                newCurrencies[currency.iso_code] =
                     currency.name;
 
             }
 
         });
+
+        if (
+            Object.keys(newCurrencies).length === 0
+        ) {
+            throw new Error(
+                "No valid currencies received"
+            );
+        }
+
+        currencies = newCurrencies;
 
         populateCurrencies();
 
@@ -297,12 +311,18 @@ async function loadCurrencies() {
             error
         );
 
-        if (fromCurrency) {
+        if (
+            fromCurrency &&
+            fromCurrency.options.length === 0
+        ) {
             fromCurrency.innerHTML =
                 '<option value="">Currency unavailable</option>';
         }
 
-        if (toCurrency) {
+        if (
+            toCurrency &&
+            toCurrency.options.length === 0
+        ) {
             toCurrency.innerHTML =
                 '<option value="">Currency unavailable</option>';
         }
@@ -319,6 +339,7 @@ async function loadCurrencies() {
     }
 
 }
+
 
 
 // ===============================
