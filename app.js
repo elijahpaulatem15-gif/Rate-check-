@@ -797,6 +797,8 @@ if (
     !Number.isFinite(data[coin].usd) ||
     data[coin].usd <= 0
 ) {
+    throw new Error("Invalid cryptocurrency price data");
+}
         
 
         const price =
@@ -862,5 +864,5 @@ if (requestId !== cryptoRequestId) {
         cryptoChange.textContent =
             "Unable to load latest rate.";
 
-        
-   
+            }
+}
