@@ -1118,7 +1118,9 @@ async function loadCryptoRate(forceRefresh = false) {
             "Price unavailable";
 
         cryptoChange.textContent =
-            "Unable to load latest rate.";
+            error && error.message
+                ? `Error: ${error.message}`
+                : "Unknown cryptocurrency error.";
 
     }
 
