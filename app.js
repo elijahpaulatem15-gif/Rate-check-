@@ -853,13 +853,30 @@ function displayRateHistory() {
 // CLEAR HISTORY
 // ===============================
 
+
 function clearRateHistory() {
 
-    localStorage.removeItem(
-        "rateCheckHistory"
-    );
+    try {
 
-    displayRateHistory();
+        localStorage.removeItem(
+            "rateCheckHistory"
+        );
+
+        displayRateHistory();
+
+    } catch (error) {
+
+        console.error(
+            "Could not clear rate history:",
+            error
+        );
+
+        if (rateHistory) {
+            rateHistory.textContent =
+                "Unable to clear rate history.";
+        }
+
+    }
 
 }
 
