@@ -764,6 +764,7 @@ function saveRateHistory(item) {
 // DISPLAY HISTORY
 // ===============================
 
+
 function displayRateHistory() {
 
     if (!rateHistory) {
@@ -776,11 +777,26 @@ function displayRateHistory() {
             localStorage.getItem("rateCheckHistory") || "[]"
         );
 
+        if (!Array.isArray(history)) {
+            throw new Error("Invalid history data");
+        }
 
-        if (
-            !Array.isArray(history) ||
-            history.length === 0
-        ) {
+        rateHistory.innerHTML = "";
+
+        const validHistory = history.filter(item => {
+
+            return (
+                item &&
+                Number.isFinite(item.amount) &&
+                typeof item.from === "string" &&
+                typeof item.to === "string" &&
+                Number.isFinite(item.rate) &&
+                Number.isFinite(item.result)
+            );
+
+        });
+
+        if (validHistory.length === 0) {
 
             rateHistory.textContent =
                 "No rate history yet.";
@@ -788,10 +804,7 @@ function displayRateHistory() {
             return;
         }
 
-
-        rateHistory.innerHTML = "";
-
-        history.forEach(item => {
+        validHistory.slice(0, 10).forEach(item => {
 
             const historyItem =
                 document.createElement("div");
@@ -820,7 +833,6 @@ function displayRateHistory() {
             rateHistory.appendChild(historyItem);
 
         });
-
 
     } catch (error) {
 
