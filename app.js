@@ -885,13 +885,22 @@ function clearRateHistory() {
 // FETCH CRYPTOCURRENCY RATES
 // ===============================
 
+
 async function fetchCryptoRates(forceRefresh = false) {
 
     const now = Date.now();
 
 
+    // If a request is already running,
+    // reuse it instead of creating another.
+
+    if (cryptoRatesPromise) {
+        return cryptoRatesPromise;
+    }
+
+
     // Use cached prices for 60 seconds
-    // unless manual refresh is requested
+    // unless manual refresh is requested.
 
     if (
         !forceRefresh &&
@@ -902,32 +911,13 @@ async function fetchCryptoRates(forceRefresh = false) {
     }
 
 
-    // Prevent duplicate requests.
-// Manual refresh waits for an existing request,
-// then starts a fresh request.
-
-if (cryptoRatesPromise) {
-
-    if (!forceRefresh) {
-        return cryptoRatesPromise;
-    }
-
-    try {
-        await cryptoRatesPromise;
-    } catch (error) {
-        // Continue and attempt a fresh request.
-    }
-
-    return fetchCryptoRates(true);
-}
-
+    // Fetch cryptocurrency prices.
 
     cryptoRatesPromise = (async () => {
 
         try {
 
             const coins = [
-
                 "bitcoin",
                 "ethereum",
                 "tether",
@@ -936,7 +926,6 @@ if (cryptoRatesPromise) {
                 "usd-coin",
                 "ripple",
                 "dogecoin"
-
             ];
 
 
@@ -963,7 +952,8 @@ if (cryptoRatesPromise) {
 
             if (
                 !data ||
-                typeof data !== "object"
+                typeof data !== "object" ||
+                Array.isArray(data)
             ) {
                 throw new Error(
                     "Invalid cryptocurrency API response"
