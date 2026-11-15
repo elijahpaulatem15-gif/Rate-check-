@@ -366,7 +366,6 @@ async function loadCurrencies() {
 // POPULATE CURRENCY SELECTORS
 // ===============================
 
-
 function populateCurrencies() {
 
     if (!fromCurrency || !toCurrency) {
@@ -394,8 +393,11 @@ function populateCurrencies() {
         localStorage.getItem("rateCheckToCurrency") ||
         "EUR";
 
+    let currencyChanged = false;
 
     function fillDropdown(select, search, preferred) {
+
+        const previousValue = select.value;
 
         const filteredList = currencyList.filter(
             ([code, name]) =>
@@ -417,18 +419,51 @@ function populateCurrencies() {
 
         });
 
-        if (
+        if (filteredList.length === 1) {
+
+            const newCurrency = filteredList[0][0];
+
+            if (previousValue !== newCurrency) {
+                currencyChanged = true;
+            }
+
+            select.value = newCurrency;
+
+        } else if (
             filteredList.some(
                 ([code]) => code === preferred
             )
         ) {
+
             select.value = preferred;
-        } else if (filteredList.length > 0) {
-            select.value = filteredList[0][0];
+
+        } else if (filteredList.length > 1) {
+
+            const preferredCurrency = currencyList.find(
+                ([code]) => code === preferred
+            );
+
+            if (preferredCurrency) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = preferredCurrency[0];
+                option.textContent =
+                    `${preferredCurrency[0]} — ${preferredCurrency[1]}`;
+
+                select.insertBefore(
+                    option,
+                    select.firstChild
+                );
+
+                select.value = preferred;
+
+            }
+
         }
 
     }
-
 
     fillDropdown(
         fromCurrency,
@@ -442,8 +477,11 @@ function populateCurrencies() {
         selectedTo
     );
 
-}
+    if (currencyChanged) {
+        convertCurrency();
+    }
 
+}
 
 // ===============================
 // GET EXCHANGE RATE
