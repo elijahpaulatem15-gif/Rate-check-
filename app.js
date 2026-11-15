@@ -453,19 +453,31 @@ function populateCurrencies() {
 // GET EXCHANGE RATE
 // ===============================
 
+
 async function getRate(from, to) {
 
-    if (!from || !to) {
+    // Validate currency selections
+
+    if (
+        typeof from !== "string" ||
+        typeof to !== "string" ||
+        !/^[A-Z]{3}$/.test(from) ||
+        !/^[A-Z]{3}$/.test(to)
+    ) {
         throw new Error(
-            "Currency not selected."
+            "Invalid currency selection."
         );
     }
+
 
     // Same currency
 
     if (from === to) {
         return 1;
     }
+
+
+    // Fetch exchange rate
 
     const response = await fetch(
         `${API_URL}/rate/${from}/${to}`,
@@ -479,6 +491,9 @@ async function getRate(from, to) {
             `Unable to fetch exchange rate: ${response.status}`
         );
     }
+
+
+    // Validate API response
 
     const data = await response.json();
 
