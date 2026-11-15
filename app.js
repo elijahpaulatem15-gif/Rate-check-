@@ -996,6 +996,7 @@ if (cryptoRatesPromise) {
 // LOAD CRYPTOCURRENCY RATE
 // ===============================
 
+
 async function loadCryptoRate(forceRefresh = false) {
 
     if (
@@ -1007,10 +1008,8 @@ async function loadCryptoRate(forceRefresh = false) {
         return;
     }
 
-
     const coin =
         cryptoCurrency.value;
-
 
     if (!coin) {
         return;
@@ -1078,7 +1077,6 @@ async function loadCryptoRate(forceRefresh = false) {
         cryptoName.textContent =
             name;
 
-
         cryptoPrice.textContent =
             `$${formatNumber(price)}`;
 
@@ -1101,7 +1099,10 @@ async function loadCryptoRate(forceRefresh = false) {
 
     } catch (error) {
 
-        if (requestId !== cryptoRequestId) {
+        if (
+            requestId !== cryptoRequestId ||
+            coin !== cryptoCurrency.value
+        ) {
             return;
         }
 
@@ -1109,7 +1110,6 @@ async function loadCryptoRate(forceRefresh = false) {
             "Crypto loading error:",
             error
         );
-
 
         cryptoName.textContent =
             "Cryptocurrency";
