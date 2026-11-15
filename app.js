@@ -366,6 +366,7 @@ async function loadCurrencies() {
 // POPULATE CURRENCY SELECTORS
 // ===============================
 
+
 function populateCurrencies() {
 
     if (!fromCurrency || !toCurrency) {
@@ -394,42 +395,17 @@ function populateCurrencies() {
         "EUR";
 
 
-    const fromList = currencyList.filter(
-        ([code, name]) =>
-            code.toLowerCase().includes(fromSearch) ||
-            name.toLowerCase().includes(fromSearch)
-    );
+    function fillDropdown(select, search, preferred) {
 
-    const toList = currencyList.filter(
-        ([code, name]) =>
-            code.toLowerCase().includes(toSearch) ||
-            name.toLowerCase().includes(toSearch)
-    );
-
-
-    function fillDropdown(select, list, preferred) {
+        const filteredList = currencyList.filter(
+            ([code, name]) =>
+                code.toLowerCase().includes(search) ||
+                name.toLowerCase().includes(search)
+        );
 
         select.innerHTML = "";
 
-        const preferredCurrency =
-            currencyList.find(
-                ([code]) => code === preferred
-            );
-
-        const finalList = [...list];
-
-        // Preserve the current selection during searching
-
-        if (
-            preferredCurrency &&
-            !finalList.some(
-                ([code]) => code === preferred
-            )
-        ) {
-            finalList.unshift(preferredCurrency);
-        }
-
-        finalList.forEach(([code, name]) => {
+        filteredList.forEach(([code, name]) => {
 
             const option =
                 document.createElement("option");
@@ -442,13 +418,13 @@ function populateCurrencies() {
         });
 
         if (
-            finalList.some(
+            filteredList.some(
                 ([code]) => code === preferred
             )
         ) {
             select.value = preferred;
-        } else if (finalList.length > 0) {
-            select.value = finalList[0][0];
+        } else if (filteredList.length > 0) {
+            select.value = filteredList[0][0];
         }
 
     }
@@ -456,13 +432,13 @@ function populateCurrencies() {
 
     fillDropdown(
         fromCurrency,
-        fromList,
+        fromSearch,
         selectedFrom
     );
 
     fillDropdown(
         toCurrency,
-        toList,
+        toSearch,
         selectedTo
     );
 
