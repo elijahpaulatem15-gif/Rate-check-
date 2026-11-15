@@ -208,11 +208,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Manual crypto refresh
 
+    
+    // Prevent frequent manual refresh requests
+
+    let lastCryptoRefreshTime = 0;
+
     if (cryptoRefreshButton) {
 
         cryptoRefreshButton.addEventListener(
             "click",
-            () => loadCryptoRate(true)
+            () => {
+
+                const now = Date.now();
+
+                if (
+                    now - lastCryptoRefreshTime < 10000
+                ) {
+                    return;
+                }
+
+                lastCryptoRefreshTime = now;
+
+                loadCryptoRate(true);
+
+            }
         );
 
     }
