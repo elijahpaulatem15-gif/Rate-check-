@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const now = Date.now();
 
                 if (
-                    now - lastCryptoRefreshTime < 10000
+                    now - lastCryptoRefreshTime < 60000
                 ) {
                     return;
                 }
@@ -236,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    
 
     // Clear history
 
