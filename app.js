@@ -542,6 +542,7 @@ function populateCurrencies() {
     convertCurrency();
 }
 
+}
 
 // ===============================
 // GET EXCHANGE RATE
