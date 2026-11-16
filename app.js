@@ -2,6 +2,35 @@
 const API_URL = "https://api.frankfurter.dev/v2";
 const CRYPTO_API_URL = "https://api.coingecko.com/api/v3/simple/price";
 
+function safeStorageGet(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (error) {
+        console.warn("Storage read failed:", error);
+        return null;
+    }
+}
+
+function safeStorageSet(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        console.warn("Storage save failed:", error);
+        return false;
+    }
+}
+
+function safeStorageRemove(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (error) {
+        console.warn("Storage removal failed:", error);
+        return false;
+    }
+}
+
 let currencies = {};
 
 let conversionRequestId = 0;
@@ -35,6 +64,7 @@ let clearHistory;
 // ===============================
 // START APP
 // ===============================
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -87,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (amountInput) {
 
         const savedAmount =
-            localStorage.getItem("rateCheckAmount");
+            safeStorageGet("rateCheckAmount");
 
         if (savedAmount !== null) {
             amountInput.value = savedAmount;
@@ -95,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         amountInput.addEventListener("input", () => {
 
-            localStorage.setItem(
+            safeStorageSet(
                 "rateCheckAmount",
                 amountInput.value
             );
@@ -136,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         fromCurrency.addEventListener("change", () => {
 
-            localStorage.setItem(
+            safeStorageSet(
                 "rateCheckFromCurrency",
                 fromCurrency.value
             );
@@ -149,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         toCurrency.addEventListener("change", () => {
 
-            localStorage.setItem(
+            safeStorageSet(
                 "rateCheckToCurrency",
                 toCurrency.value
             );
@@ -181,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cryptoCurrency) {
 
         const savedCrypto =
-            localStorage.getItem("rateCheckCrypto");
+            safeStorageGet("rateCheckCrypto");
 
         if (
             savedCrypto &&
@@ -194,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         cryptoCurrency.addEventListener("change", () => {
 
-            localStorage.setItem(
+            safeStorageSet(
                 "rateCheckCrypto",
                 cryptoCurrency.value
             );
@@ -208,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Manual crypto refresh
 
-    
     // Prevent frequent manual refresh requests
 
     let lastCryptoRefreshTime = 0;
@@ -236,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    
 
     // Clear history
 
@@ -366,6 +394,7 @@ async function loadCurrencies() {
 // POPULATE CURRENCY SELECTORS
 // ===============================
 
+
 function populateCurrencies() {
 
     if (!fromCurrency || !toCurrency) {
@@ -385,12 +414,12 @@ function populateCurrencies() {
 
     const selectedFrom =
         fromCurrency.value ||
-        localStorage.getItem("rateCheckFromCurrency") ||
+        safeStorageGet("rateCheckFromCurrency") ||
         "USD";
 
     const selectedTo =
         toCurrency.value ||
-        localStorage.getItem("rateCheckToCurrency") ||
+        safeStorageGet("rateCheckToCurrency") ||
         "EUR";
 
     let currencyChanged = false;
