@@ -608,7 +608,7 @@ async function convertCurrency() {
         return;
     }
 
-    // Invalidate any older conversion request
+    // Invalidate older conversion requests
     const requestId =
         ++conversionRequestId;
 
@@ -620,6 +620,19 @@ async function convertCurrency() {
 
     const to =
         toCurrency.value;
+
+
+    // Validate currencies first
+
+    if (!from || !to) {
+
+        resultValue.textContent =
+            "Currency unavailable";
+
+        rateText.textContent = "";
+
+        return;
+    }
 
 
     // Validate amount
@@ -638,27 +651,14 @@ async function convertCurrency() {
     }
 
 
-    // Validate currencies
+    // Save selections safely
 
-    if (!from || !to) {
-
-        resultValue.textContent =
-            "Select currencies";
-
-        rateText.textContent = "";
-
-        return;
-    }
-
-
-    // Save selections
-
-    localStorage.setItem(
+    safeStorageSet(
         "rateCheckFromCurrency",
         from
     );
 
-    localStorage.setItem(
+    safeStorageSet(
         "rateCheckToCurrency",
         to
     );
@@ -722,10 +722,10 @@ async function convertCurrency() {
 }
 
 
-
 // ===============================
 // SWAP CURRENCIES
 // ===============================
+
 
 function swapCurrencies() {
 
@@ -743,6 +743,8 @@ function swapCurrencies() {
         return;
     }
 
+    // Clear search fields
+
     if (fromCurrencySearch) {
         fromCurrencySearch.value = "";
     }
@@ -751,21 +753,30 @@ function swapCurrencies() {
         toCurrencySearch.value = "";
     }
 
+    // Restore complete currency lists
+
     populateCurrencies();
+
+    // Swap selected currencies
 
     fromCurrency.value = currentTo;
     toCurrency.value = currentFrom;
 
 
-    localStorage.setItem(
+    // Save selections safely
+
+    safeStorageSet(
         "rateCheckFromCurrency",
         currentTo
     );
 
-    localStorage.setItem(
+    safeStorageSet(
         "rateCheckToCurrency",
         currentFrom
     );
+
+
+    // Convert using swapped currencies
 
     convertCurrency();
 
