@@ -145,19 +145,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Currency search
 
+    
     if (fromCurrencySearch) {
         fromCurrencySearch.addEventListener(
             "input",
-            populateCurrencies
+            () => {
+                populateCurrencies();
+
+                if (!fromCurrency.value) {
+                    convertCurrency();
+                }
+            }
         );
     }
 
     if (toCurrencySearch) {
         toCurrencySearch.addEventListener(
             "input",
-            populateCurrencies
+            () => {
+                populateCurrencies();
+
+                if (!toCurrency.value) {
+                    convertCurrency();
+                }
+            }
         );
     }
+
 
 
     // Save currency selections
