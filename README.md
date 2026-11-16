@@ -1,5 +1,6 @@
-
 # Rate Check
+
+**Know the rate. Know the difference.**
 
 Rate Check is a free currency exchange-rate checker and converter that helps users compare currencies worldwide and check cryptocurrency prices.
 
@@ -13,12 +14,12 @@ Rate Check is a free currency exchange-rate checker and converter that helps use
 
 ## Live App
 
-https://elijahpaulatem15-gif.github.io/Rate-check-/
+[Open Rate Check](https://elijahpaulatem15-gif.github.io/Rate-check-/)
 
 ## Data Sources
 
-- Currency exchange rates: Frankfurter API.
-- Cryptocurrency prices: CoinGecko API.
+- **Currency exchange rates:** [Frankfurter API](https://www.frankfurter.dev/)
+- **Cryptocurrency prices:** [CoinGecko API](https://www.coingecko.com/)
 
 ## Project
 
