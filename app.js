@@ -405,6 +405,10 @@ function populateCurrencies() {
                 name.toLowerCase().includes(search)
         );
 
+        const exactCodeMatch = currencyList.find(
+            ([code]) => code.toLowerCase() === search
+        );
+
         select.innerHTML = "";
 
         filteredList.forEach(([code, name]) => {
@@ -419,23 +423,29 @@ function populateCurrencies() {
 
         });
 
-        if (filteredList.length === 1) {
+        let newSelection = preferred;
 
-            const newCurrency = filteredList[0][0];
+        if (exactCodeMatch) {
 
-            if (previousValue !== newCurrency) {
-                currencyChanged = true;
-            }
+            newSelection = exactCodeMatch[0];
 
-            select.value = newCurrency;
+        } else if (filteredList.length === 1) {
 
-        } else if (
+            newSelection = filteredList[0][0];
+
+        }
+
+        if (
             filteredList.some(
-                ([code]) => code === preferred
+                ([code]) => code === newSelection
             )
         ) {
 
-            select.value = preferred;
+            select.value = newSelection;
+
+            if (previousValue !== newSelection) {
+                currencyChanged = true;
+            }
 
         } else if (filteredList.length > 1) {
 
@@ -482,6 +492,7 @@ function populateCurrencies() {
     }
 
 }
+
 
 // ===============================
 // GET EXCHANGE RATE
