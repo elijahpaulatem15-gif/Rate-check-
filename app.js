@@ -436,11 +436,7 @@ function populateCurrencies() {
         safeStorageGet("rateCheckToCurrency") ||
         "EUR";
 
-    let currencyChanged = false;
-
     function fillDropdown(select, search, preferred) {
-
-        const previousValue = select.value;
 
         const filteredList = currencyList.filter(
             ([code, name]) =>
@@ -513,13 +509,6 @@ function populateCurrencies() {
 
         }
 
-        if (
-            select.value &&
-            previousValue !== select.value
-        ) {
-            currencyChanged = true;
-        }
-
     }
 
     fillDropdown(
@@ -534,15 +523,8 @@ function populateCurrencies() {
         selectedTo
     );
 
-    if (
-    currencyChanged ||
-    !fromCurrency.value ||
-    !toCurrency.value
-) {
-    convertCurrency();
 }
 
-}
 
 // ===============================
 // GET EXCHANGE RATE
