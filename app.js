@@ -472,10 +472,6 @@ function populateCurrencies() {
 
             select.value = newSelection;
 
-            if (previousValue !== newSelection) {
-                currencyChanged = true;
-            }
-
         } else if (filteredList.length > 1) {
 
             const preferredCurrency = currencyList.find(
@@ -488,6 +484,7 @@ function populateCurrencies() {
                     document.createElement("option");
 
                 option.value = preferredCurrency[0];
+
                 option.textContent =
                     `${preferredCurrency[0]} — ${preferredCurrency[1]}`;
 
@@ -500,6 +497,13 @@ function populateCurrencies() {
 
             }
 
+        }
+
+        if (
+            select.value &&
+            previousValue !== select.value
+        ) {
+            currencyChanged = true;
         }
 
     }
