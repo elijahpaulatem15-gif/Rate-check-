@@ -534,10 +534,12 @@ function populateCurrencies() {
         selectedTo
     );
 
-    if (currencyChanged) {
-        convertCurrency();
-    }
-
+    if (
+    currencyChanged ||
+    !fromCurrency.value ||
+    !toCurrency.value
+) {
+    convertCurrency();
 }
 
 
