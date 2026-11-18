@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "rate-check-v4";
+const CACHE_NAME = "rate-check-v5";
 
 const FILES_TO_CACHE = [
     "./",
@@ -13,11 +13,12 @@ const FILES_TO_CACHE = [
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => cache.addAll(FILES_TO_CACHE))
+        Promise.all([
+            caches.open(CACHE_NAME)
+                .then((cache) => cache.addAll(FILES_TO_CACHE)),
+            self.skipWaiting()
+        ])
     );
-
-    self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -25,7 +26,10 @@ self.addEventListener("activate", (event) => {
         caches.keys().then((cacheNames) =>
             Promise.all(
                 cacheNames
-                    .filter((name) => name !== CACHE_NAME)
+                    .filter((name) =>
+                        name.startsWith("rate-check-") &&
+                        name !== CACHE_NAME
+                    )
                     .map((name) => caches.delete(name))
             )
         ).then(() => self.clients.claim())
@@ -52,21 +56,21 @@ self.addEventListener("fetch", (event) => {
 
                 if (response && response.ok) {
                     const cache = await caches.open(CACHE_NAME);
-
                     await cache.put(request, response.clone());
                 }
 
                 return response;
 
             } catch (error) {
-                const cachedResponse = await caches.match(request);
+                const cache = await caches.open(CACHE_NAME);
+                const cachedResponse = await cache.match(request);
 
                 if (cachedResponse) {
                     return cachedResponse;
                 }
 
                 if (request.mode === "navigate") {
-                    const offlinePage = await caches.match("./index.html");
+                    const offlinePage = await cache.match("./index.html");
 
                     if (offlinePage) {
                         return offlinePage;
