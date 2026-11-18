@@ -1054,12 +1054,10 @@ async function loadCryptoRate(forceRefresh = false) {
         return;
     }
 
-
     // Protect against outdated requests
 
     const requestId =
         ++cryptoRequestId;
-
 
     cryptoPrice.textContent =
         "Loading...";
@@ -1067,12 +1065,10 @@ async function loadCryptoRate(forceRefresh = false) {
     cryptoChange.textContent =
         "Checking latest price...";
 
-
     try {
 
         const data =
             await fetchCryptoRates(forceRefresh);
-
 
         if (
             requestId !== cryptoRequestId ||
@@ -1080,7 +1076,6 @@ async function loadCryptoRate(forceRefresh = false) {
         ) {
             return;
         }
-
 
         if (
             !data[coin] ||
@@ -1093,32 +1088,27 @@ async function loadCryptoRate(forceRefresh = false) {
             );
         }
 
-
         const price =
             data[coin].usd;
 
         const change =
             data[coin].usd_24h_change;
 
-
         const selectedOption =
             cryptoCurrency.options[
                 cryptoCurrency.selectedIndex
             ];
-
 
         const name =
             selectedOption
                 ? selectedOption.textContent
                 : coin;
 
-
         cryptoName.textContent =
             name;
 
         cryptoPrice.textContent =
             `$${formatNumber(price)}`;
-
 
         if (Number.isFinite(change)) {
 
@@ -1134,7 +1124,6 @@ async function loadCryptoRate(forceRefresh = false) {
                 "24h change unavailable";
 
         }
-
 
     } catch (error) {
 
@@ -1156,10 +1145,17 @@ async function loadCryptoRate(forceRefresh = false) {
         cryptoPrice.textContent =
             "Price unavailable";
 
-        cryptoChange.textContent =
-            error && error.message
-                ? `Error: ${error.message}`
-                : "Unknown cryptocurrency error.";
+        if (error instanceof TypeError) {
+
+            cryptoChange.textContent =
+                "Unable to connect. Check your internet connection and try again.";
+
+        } else {
+
+            cryptoChange.textContent =
+                "The latest cryptocurrency price is temporarily unavailable. Try again later.";
+
+        }
 
     }
 
