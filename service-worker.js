@@ -1,9 +1,10 @@
 
-const CACHE_NAME = "rate-check-v3";
+const CACHE_NAME = "rate-check-v4";
 
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
+    "./privacy.html",
     "./style.css",
     "./app.js",
     "./manifest.json",
@@ -45,19 +46,19 @@ self.addEventListener("fetch", (event) => {
     }
 
     event.respondWith(
-        fetch(request)
-            .then((response) => {
-                if (response && response.ok) {
-                    const responseClone = response.clone();
+        (async () => {
+            try {
+                const response = await fetch(request);
 
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(request, responseClone);
-                    });
+                if (response && response.ok) {
+                    const cache = await caches.open(CACHE_NAME);
+
+                    await cache.put(request, response.clone());
                 }
 
                 return response;
-            })
-            .catch(async () => {
+
+            } catch (error) {
                 const cachedResponse = await caches.match(request);
 
                 if (cachedResponse) {
@@ -72,13 +73,16 @@ self.addEventListener("fetch", (event) => {
                     }
                 }
 
-                return new Response("You are offline. Please check your internet connection.", {
-                    status: 503,
-                    headers: {
-                        "Content-Type": "text/plain; charset=utf-8"
+                return new Response(
+                    "You are offline. Please check your internet connection.",
+                    {
+                        status: 503,
+                        headers: {
+                            "Content-Type": "text/plain; charset=utf-8"
+                        }
                     }
-                });
-            })
+                );
+            }
+        })()
     );
 });
- 
