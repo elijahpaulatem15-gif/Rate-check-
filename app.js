@@ -607,68 +607,33 @@ async function convertCurrency() {
         return;
     }
 
-    // Invalidate older conversion requests
-    const requestId =
-        ++conversionRequestId;
+    const requestId = ++conversionRequestId;
 
-    const amount =
-        parseFloat(amountInput.value);
-
-    const from =
-        fromCurrency.value;
-
-    const to =
-        toCurrency.value;
-
-
-    // Validate currencies first
+    const amount = parseFloat(amountInput.value);
+    const from = fromCurrency.value;
+    const to = toCurrency.value;
 
     if (!from || !to) {
-
-        resultValue.textContent =
-            "Currency unavailable";
-
+        resultValue.textContent = "Currency unavailable";
         rateText.textContent = "";
-
         return;
     }
-
-
-    // Validate amount
 
     if (
         !Number.isFinite(amount) ||
         amount < 0
     ) {
-
-        resultValue.textContent =
-            "Enter an amount";
-
+        resultValue.textContent = "Enter an amount";
         rateText.textContent = "";
-
         return;
     }
 
+    safeStorageSet("rateCheckFromCurrency", from);
+    safeStorageSet("rateCheckToCurrency", to);
 
-    // Save selections safely
-
-    safeStorageSet(
-        "rateCheckFromCurrency",
-        from
-    );
-
-    safeStorageSet(
-        "rateCheckToCurrency",
-        to
-    );
-
-
-    resultValue.textContent =
-        "Loading...";
-
+    resultValue.textContent = "Loading...";
     rateText.textContent =
         "Checking the latest market rate...";
-
 
     try {
 
@@ -678,8 +643,7 @@ async function convertCurrency() {
             return;
         }
 
-        const converted =
-            amount * rate;
+        const converted = amount * rate;
 
         resultValue.textContent =
             `${formatNumber(converted)} ${to}`;
@@ -687,17 +651,13 @@ async function convertCurrency() {
         rateText.textContent =
             `1 ${from} = ${formatNumber(rate)} ${to}`;
 
-
         saveRateHistory({
-
             amount: amount,
             from: from,
             to: to,
             rate: rate,
             result: converted
-
         });
-
 
     } catch (error) {
 
@@ -705,16 +665,17 @@ async function convertCurrency() {
             return;
         }
 
-        console.error(
-            "Conversion error:",
-            error
-        );
+        console.error("Conversion error:", error);
 
-        resultValue.textContent =
-            "Rate unavailable";
+        resultValue.textContent = "Rate unavailable";
 
-        rateText.textContent =
-            "This currency pair is not available from the current data source.";
+        if (error instanceof TypeError) {
+            rateText.textContent =
+                "Unable to connect to the currency service. Check your internet connection and try again.";
+        } else {
+            rateText.textContent =
+                "The exchange rate is currently unavailable for this currency pair. Try again later.";
+        }
 
     }
 
