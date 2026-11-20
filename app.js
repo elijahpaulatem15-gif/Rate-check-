@@ -939,17 +939,13 @@ async function fetchCryptoRates(forceRefresh = false) {
 
     const now = Date.now();
 
-
-    // If a request is already running,
-    // reuse it instead of creating another.
+    // Reuse an active request
 
     if (cryptoRatesPromise) {
         return cryptoRatesPromise;
     }
 
-
     // Use cached prices for 60 seconds
-    // unless manual refresh is requested.
 
     if (
         !forceRefresh &&
@@ -959,74 +955,125 @@ async function fetchCryptoRates(forceRefresh = false) {
         return cryptoRates;
     }
 
+    const coins = [
+        "bitcoin",
+        "ethereum",
+        "tether",
+        "binancecoin",
+        "solana",
+        "usd-coin",
+        "ripple",
+        "dogecoin"
+    ];
 
-    // Fetch cryptocurrency prices.
+    const url =
+        `${CRYPTO_API_URL}?ids=${coins.join(",")}&vs_currencies=usd&include_24hr_change=true`;
 
-    cryptoRatesPromise = (async () => {
+    const request = (async () => {
 
-        try {
+        let lastError;
 
-            const coins = [
-                "bitcoin",
-                "ethereum",
-                "tether",
-                "binancecoin",
-                "solana",
-                "usd-coin",
-                "ripple",
-                "dogecoin"
-            ];
+        // Try up to 3 times
 
+        for (let attempt = 1; attempt <= 3; attempt++) {
 
-            const response = await fetch(
+            const controller = new AbortController();
 
-                `${CRYPTO_API_URL}?ids=${coins.join(",")}&vs_currencies=usd&include_24hr_change=true`,
+            const timeoutId = setTimeout(() => {
+                controller.abort();
+            }, 15000);
 
-                {
-                    cache: "no-store"
+            try {
+
+                const response = await fetch(url, {
+                    cache: "no-store",
+                    signal: controller.signal
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Crypto API error: ${response.status}`
+                    );
                 }
 
-            );
+                const data = await response.json();
 
+                if (
+                    !data ||
+                    typeof data !== "object" ||
+                    Array.isArray(data)
+                ) {
+                    throw new Error(
+                        "Invalid cryptocurrency API response"
+                    );
+                }
 
-            if (!response.ok) {
-                throw new Error(
-                    `Crypto API error: ${response.status}`
+                // Validate all expected coin prices
+
+                for (const coin of coins) {
+
+                    if (
+                        !data[coin] ||
+                        typeof data[coin].usd !== "number" ||
+                        !Number.isFinite(data[coin].usd) ||
+                        data[coin].usd <= 0
+                    ) {
+                        throw new Error(
+                            `Invalid price data for ${coin}`
+                        );
+                    }
+
+                }
+
+                cryptoRates = data;
+                cryptoRatesUpdatedAt = Date.now();
+
+                return cryptoRates;
+
+            } catch (error) {
+
+                lastError = error;
+
+                console.warn(
+                    `Crypto request attempt ${attempt} failed:`,
+                    error
                 );
+
+                if (attempt < 3) {
+
+                    await new Promise(resolve =>
+                        setTimeout(resolve, attempt * 1000)
+                    );
+
+                }
+
+            } finally {
+
+                clearTimeout(timeoutId);
+
             }
-
-
-            const data = await response.json();
-
-
-            if (
-                !data ||
-                typeof data !== "object" ||
-                Array.isArray(data)
-            ) {
-                throw new Error(
-                    "Invalid cryptocurrency API response"
-                );
-            }
-
-
-            cryptoRates = data;
-
-            cryptoRatesUpdatedAt = Date.now();
-
-            return cryptoRates;
-
-
-        } finally {
-
-            cryptoRatesPromise = null;
 
         }
 
+        throw lastError || new Error(
+            "Unable to retrieve cryptocurrency prices"
+        );
+
     })();
 
+    cryptoRatesPromise = request;
 
-    return cryptoRatesPromise;
+    try {
+
+        return await request;
+
+    } finally {
+
+        if (cryptoRatesPromise === request) {
+            cryptoRatesPromise = null;
+        }
+
+    }
 
 }
 
@@ -1047,8 +1094,7 @@ async function loadCryptoRate(forceRefresh = false) {
         return;
     }
 
-    const coin =
-        cryptoCurrency.value;
+    const coin = cryptoCurrency.value;
 
     if (!coin) {
         return;
@@ -1056,19 +1102,18 @@ async function loadCryptoRate(forceRefresh = false) {
 
     // Protect against outdated requests
 
-    const requestId =
-        ++cryptoRequestId;
+    const requestId = ++cryptoRequestId;
 
-    cryptoPrice.textContent =
-        "Loading...";
+    cryptoPrice.textContent = "Loading...";
 
     cryptoChange.textContent =
         "Checking latest price...";
 
     try {
 
-        const data =
-            await fetchCryptoRates(forceRefresh);
+        const data = await fetchCryptoRates(forceRefresh);
+
+        // Ignore outdated requests
 
         if (
             requestId !== cryptoRequestId ||
@@ -1077,43 +1122,40 @@ async function loadCryptoRate(forceRefresh = false) {
             return;
         }
 
+        const coinData = data[coin];
+
         if (
-            !data[coin] ||
-            typeof data[coin].usd !== "number" ||
-            !Number.isFinite(data[coin].usd) ||
-            data[coin].usd <= 0
+            !coinData ||
+            typeof coinData.usd !== "number" ||
+            !Number.isFinite(coinData.usd) ||
+            coinData.usd <= 0
         ) {
             throw new Error(
                 "Invalid cryptocurrency price data"
             );
         }
 
-        const price =
-            data[coin].usd;
+        const price = coinData.usd;
 
-        const change =
-            data[coin].usd_24h_change;
+        const change = coinData.usd_24h_change;
 
         const selectedOption =
             cryptoCurrency.options[
                 cryptoCurrency.selectedIndex
             ];
 
-        const name =
-            selectedOption
-                ? selectedOption.textContent
-                : coin;
+        const name = selectedOption
+            ? selectedOption.textContent
+            : coin;
 
-        cryptoName.textContent =
-            name;
+        cryptoName.textContent = name;
 
         cryptoPrice.textContent =
             `$${formatNumber(price)}`;
 
         if (Number.isFinite(change)) {
 
-            const sign =
-                change >= 0 ? "+" : "";
+            const sign = change >= 0 ? "+" : "";
 
             cryptoChange.textContent =
                 `${sign}${formatNumber(change)}% (24h)`;
@@ -1139,13 +1181,16 @@ async function loadCryptoRate(forceRefresh = false) {
             error
         );
 
-        cryptoName.textContent =
-            "Cryptocurrency";
+        cryptoName.textContent = "Cryptocurrency";
 
-        cryptoPrice.textContent =
-            "Price unavailable";
+        cryptoPrice.textContent = "Price unavailable";
 
-        if (error instanceof TypeError) {
+        if (error.name === "AbortError") {
+
+            cryptoChange.textContent =
+                "Request timed out. Please try again.";
+
+        } else if (error instanceof TypeError) {
 
             cryptoChange.textContent =
                 "Unable to connect. Check your internet connection and try again.";
@@ -1160,3 +1205,4 @@ async function loadCryptoRate(forceRefresh = false) {
     }
 
 }
+
