@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rate Check</string>
+    <string name="title_activity_main">Rate Check</string>
+    <string name="package_name">com.elijahpaulatem15.ratecheck</string>
+    <string name="custom_url_scheme">com.elijahpaulatem15.ratecheck</string>
+</resources>

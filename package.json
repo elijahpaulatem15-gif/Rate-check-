@@ -1,0 +1,26 @@
+{
+  "name": "rate-check-",
+  "version": "1.0.0",
+  "description": "**Know the rate. Know the difference.**",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elijahpaulatem15-gif/Rate-check-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/elijahpaulatem15-gif/Rate-check-/issues"
+  },
+  "homepage": "https://github.com/elijahpaulatem15-gif/Rate-check-#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/cli": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  }
+}

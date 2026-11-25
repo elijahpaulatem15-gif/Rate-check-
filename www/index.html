@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#080d12">
+
+    <link rel="manifest" href="./manifest.json">
+
+    <title>Rate Check — Currency & Crypto Converter</title>
+
+    <meta name="description"
+          content="Rate Check is a free currency converter and cryptocurrency rate checker. Convert currencies and check crypto prices quickly and easily.">
+
+    <meta name="robots"
+          content="index, follow">
+
+    <link rel="canonical"
+      href="https://elijahpaulatem15-gif.github.io/Rate-check-/">
+
+    <meta property="og:title"
+          content="Rate Check — Currency & Crypto Converter">
+
+    <meta property="og:description"
+          content="Convert currencies and check cryptocurrency rates with Rate Check.">
+
+    <meta property="og:type"
+          content="website">
+
+    <meta property="og:url"
+      content="https://elijahpaulatem15-gif.github.io/Rate-check-/">
+
+    <meta name="twitter:card"
+      content="summary_large_image">
+
+    <meta name="twitter:title"
+          content="Rate Check — Currency & Crypto Converter">
+
+    <meta name="twitter:description"
+          content="A free currency converter and cryptocurrency rate checker.">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="app-header">
+
+            <div class="logo">
+                💱 RATE CHECK
+            </div>
+
+            <p class="tagline">
+                Know the rate. Know the difference.
+            </p>
+
+        </header>
+
+
+        <!-- Currency Converter -->
+        <main>
+
+            <section class="converter-card">
+
+                <h1>Currency Converter</h1>
+
+                <p class="subtitle">
+                    Convert currencies using current market rates.
+                </p>
+
+
+                <!-- Amount -->
+                <div class="input-group">
+
+                    <label for="amount">
+                        Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        value="1"
+                        min="0"
+                        step="any"
+                        placeholder="Enter amount"
+                    >
+
+                </div>
+              
+            
+
+                <!-- From Currency -->
+                <div class="currency-row">
+
+                    <div class="currency-box">
+
+                        <label for="fromCurrency">
+                            From
+                        </label>
+
+                <input
+    type="text"
+    id="fromCurrencySearch"
+    placeholder="Search currency..."
+    autocomplete="off"
+    aria-label="Search starting currency"
+>
+                        <select id="fromCurrency">
+                        </select>
+
+                    </div>
+
+
+                    <!-- Swap -->
+                    <button
+                        id="swapButton"
+                        class="swap-button"
+                        type="button"
+                        aria-label="Swap currencies"
+                    >
+                        ⇄
+                    </button>
+
+               
+
+
+                    <!-- To Currency -->
+                    <div class="currency-box">
+
+                        <label for="toCurrency">
+                            To
+                        </label>
+          
+  <input
+    type="text"
+    id="toCurrencySearch"
+    placeholder="Search currency..."
+    autocomplete="off"
+    aria-label="Search destination currency"
+>
+    
+                      <select id="toCurrency">
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Convert Button -->
+                <button
+                    id="convertButton"
+                    class="convert-button"
+                    type="button"
+                >
+                    Convert
+                </button>
+
+
+                <!-- Result -->
+                <div class="result-card">
+
+                    <div
+                        id="resultValue"
+                        class="result-value"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        id="rateText"
+                        class="rate-text"
+                    >
+                        Enter an amount to check the rate.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Cryptocurrency -->
+            <section class="crypto-card">
+
+                <h2>Cryptocurrency Rates</h2>
+
+                <p class="subtitle">
+                    Check current cryptocurrency prices.
+                </p>
+
+
+                <div class="crypto-selector">
+
+                    <label for="cryptoCurrency">
+                        Cryptocurrency
+                    </label>
+
+                    <select id="cryptoCurrency">
+
+                        <option value="bitcoin">
+                            Bitcoin (BTC)
+                        </option>
+
+                        <option value="ethereum">
+                            Ethereum (ETH)
+                        </option>
+
+                        <option value="tether">
+                            Tether (USDT)
+                        </option>
+
+                        <option value="binancecoin">
+                            BNB
+                        </option>
+
+                        <option value="solana">
+                            Solana (SOL)
+                        </option>
+
+                        <option value="usd-coin">
+                            USD Coin (USDC)
+                        </option>
+
+                      <option value="ripple">
+    XRP
+</option>
+
+                        <option value="dogecoin">
+                            Dogecoin (DOGE)
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="crypto-result">
+
+                    <div
+                        id="cryptoName"
+                        class="crypto-name"
+                    >
+                        Bitcoin
+                    </div>
+
+                    <div
+                        id="cryptoPrice"
+                        class="crypto-price"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        id="cryptoChange"
+                        class="crypto-change"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="cryptoRefreshButton"
+                    class="convert-button"
+                    type="button"
+                >
+                    Check Crypto Rate
+                </button>
+
+            </section>
+
+
+            <!-- Rate History -->
+            <section class="history-card">
+
+                <h2>Rate History</h2>
+
+                <p class="subtitle">
+                    Your recent currency checks
+                </p>
+
+                <div id="rateHistory">
+                    No rate history yet.
+                </div>
+
+                <button
+                    id="clearHistory"
+                    class="clear-history-button"
+                    type="button"
+                >
+                    Clear History
+                </button>
+
+            </section>
+
+        </main>
+
+
+      
+<!-- Footer -->
+<footer>
+
+    <p>
+        © 2026 Rate Check
+    </p>
+
+    <p>
+        Currency & Cryptocurrency Rates
+    </p>
+
+    <p>
+        <a href="privacy.html">Privacy Policy</a>
+    </p>
+
+</footer>
+ 
+
+   
+<script src="app.js"></script>
+
+<script>
+    window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("./service-worker.js")
+                .catch((error) => {
+                    console.error(
+                        "Service worker registration failed:",
+                        error
+                    );
+                });
+        }
+    });
+</script>
+
+</body>
+</html>
